@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "Win64",
+            "intelliSenseMode": "gcc-x86",
+            "includePath": [
+                "${workspaceRoot}",
+                "C:/MinGW/lib/gcc/mingw32/8.2.0/include",
+                "C:/MinGW/lib/gcc/mingw32/8.2.0/include/c++"
+            ],
+            "compilerPath": "C:/MinGW/bin/g++.exe"
+        }
+    ],
+    "version": 4
+}
