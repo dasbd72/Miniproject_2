@@ -1,10 +1,11 @@
 # Makefile for Windows
 CXX = g++
-CXXFLAGS = -std=c++11 -IC:\allegro-x86_64-w64-mingw32-gcc-9.2.0-posix-seh-static-5.2.6.0\allegro\include -O2
+CXXFLAGS = -std=c++11 -IC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\include -O2
 LDFLAGS = -lm -Wall -Wextra
-LDLIBS = -LC:\allegro-x86_64-w64-mingw32-gcc-9.2.0-posix-seh-static-5.2.6.0\allegro\lib -lallegro_monolith.dll
+LDLIBS = -LC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\lib -lallegro_monolith
 exe = TowerDefense.exe
-obj = Allegro5Exception.o AudioHelper.o Bullet.o Collider.o DirtyEffect.o Enemy.o ExplosionEffect.o FireBullet.o GameEngine.o Group.o IControl.o Image.o ImageButton.o IObject.o IScene.o Label.o LaserBullet.o LaserTurret.o LOG.o LoseScene.o MachineGunTurret.o MissileBullet.o MissileTurret.o Plane.o PlaneEnemy.o PlayScene.o Point.o Resources.o Slider.o SoldierEnemy.o Sprite.o StageSelectScene.o TankEnemy.o Turret.o TurretButton.o WinScene.o main.o
+obj = Allegro5Exception.o AudioHelper.o Bullet.o Collider.o DirtyEffect.o Enemy.o ExplosionEffect.o GameEngine.o Group.o IceCreamBullet.o IControl.o Image.o ImageButton.o IObject.o IScene.o Label.o LOG.o LoseScene.o NormalEnemy.o Plane.o PlateletTurret.o PlayScene.o PockyBullet.o Point.o Resources.o SettingScene.o Slider.o SofaEnemy.o Sprite.o StageSelectScene.o Start_Scene.o StrongEnemy.o Turret.o TurretButton.o WBCellTurret.o WinScene.o main.o
+# FireBullet.o LaserBullet.o LaserTurret.o  MachineGunTurret.o MissileBullet.o MissileTurret.o PlaneEnemy.o SoldierEnemy.o TankEnemy.o
 
 .PHONY: all clean
 
@@ -16,3 +17,7 @@ all: $(obj)
 
 clean:
 	del $(exe) $(obj)
+
+# lm : linker option
+# make
+# g++ -o TowerDefense.exe Allegro5Exception.o AudioHelper.o Bullet.o Collider.o DirtyEffect.o Enemy.o ExplosionEffect.o GameEngine.o Group.o IceCreamBullet.o IControl.o Image.o ImageButton.o IObject.o IScene.o Label.o LOG.o LoseScene.o NormalEnemy.o Plane.o PlateletTurret.o PlayScene.o PockyBullet.o Point.o Resources.o Slider.o SofaEnemy.o Sprite.o StageSelectScene.o Start_Scene.o StrongEnemy.o Turret.o TurretButton.o WBCellTurret.o WinScene.o main.o -lm -Wall -Wextra -LC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\lib -lallegro_monolith

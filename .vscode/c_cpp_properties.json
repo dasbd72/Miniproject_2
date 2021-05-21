@@ -6,7 +6,8 @@
             "includePath": [
                 "${workspaceRoot}",
                 "C:/MinGW/lib/gcc/mingw32/8.2.0/include",
-                "C:/MinGW/lib/gcc/mingw32/8.2.0/include/c++"
+                "C:/MinGW/lib/gcc/mingw32/8.2.0/include/c++",
+                "C:/allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0/include"
             ],
             "compilerPath": "C:/MinGW/bin/g++.exe"
         }

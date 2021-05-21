@@ -7,7 +7,7 @@
             "request": "launch",
             "preLaunchTask": "Build_workspaceFolder",
             "cwd": "${workspaceFolder}",
-            "program": "start.exe",
+            "program": "TowerDefense.exe",
             "stopAtEntry": false,
             "console": "externalTerminal"
         }
