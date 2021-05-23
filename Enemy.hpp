@@ -8,7 +8,7 @@
 #include "Sprite.hpp"
 
 class Bullet;
-class PlayScene;
+class ScenePlay;
 class Turret;
 
 class Enemy : public Engine::Sprite {
@@ -17,7 +17,7 @@ protected:
 	float speed;
 	float hp;
 	int money;
-	PlayScene* getPlayScene();
+	ScenePlay* getPlayScene();
 	virtual void OnExplode();
 public:
 	float reachEndTime;

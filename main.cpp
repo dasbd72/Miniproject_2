@@ -2,24 +2,24 @@
 // this template is provided for the 2D tower defense game.
 // Program entry point.
 // Returns program exit code.
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "LOG.hpp"
-#include "LoseScene.hpp"
-#include "PlayScene.hpp"
-#include "StageSelectScene.hpp"
-#include "WinScene.hpp"
-#include "Start_Scene.hpp"
-#include "SettingScene.hpp"
+#include "SceneLose.hpp"
+#include "ScenePlay.hpp"
+#include "SceneStageSelect.hpp"
+#include "SceneWin.hpp"
+#include "SceneStart.hpp"
+#include "SceneSetting.hpp"
 
 int main(int argc, char **argv) {
 	Engine::LOG::SetConfig(true);
-	Engine::GameEngine& game = Engine::GameEngine::GetInstance();
+	Engine::EngineGame& game = Engine::EngineGame::GetInstance();
     // TODO 1 (1/3): Add a New Scene here
-	game.AddNewScene("stage-select", new StageSelectScene());
-	game.AddNewScene("play", new PlayScene());
-	game.AddNewScene("lose", new LoseScene());
-	game.AddNewScene("win", new WinScene());
-	game.AddNewScene("setting", new SettingScene());
+	game.AddNewScene("stage-select", new SceneStageSelect());
+	game.AddNewScene("play", new ScenePlay());
+	game.AddNewScene("lose", new SceneLose());
+	game.AddNewScene("win", new SceneWin());
+	game.AddNewScene("setting", new SceneSetting());
 	game.AddNewScene("start_scene", new StartScene());
 	
 	game.Start("start_scene", 60, 1536, 896);

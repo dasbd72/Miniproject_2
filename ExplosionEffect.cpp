@@ -2,14 +2,14 @@
 #include <string>
 
 #include "ExplosionEffect.hpp"
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IScene.hpp"
-#include "PlayScene.hpp"
+#include "ScenePlay.hpp"
 #include "Resources.hpp"
 // TODO 3 (2/2): You can imitate the 2 files: '"ExplosionEffect.hpp', '"ExplosionEffect.cpp' to create a Shoot Effect.
-PlayScene* ExplosionEffect::getPlayScene() {
-	return dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
+ScenePlay* ExplosionEffect::getPlayScene() {
+	return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
 ExplosionEffect::ExplosionEffect(float x, float y) : Sprite("play/explosion-1.png", x, y), timeTicks(0) {
 	for (int i = 1; i <= 5; i++) {

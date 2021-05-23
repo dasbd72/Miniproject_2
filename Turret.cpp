@@ -4,16 +4,16 @@
 #include <utility>
 
 #include "Enemy.hpp"
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IObject.hpp"
 #include "IScene.hpp"
-#include "PlayScene.hpp"
+#include "ScenePlay.hpp"
 #include "Point.hpp"
 #include "Turret.hpp"
 
-PlayScene* Turret::getPlayScene() {
-	return dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
+ScenePlay* Turret::getPlayScene() {
+	return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
 Turret::Turret(std::string imgTurret, float x, float y,/* float radius,*/ int price, float coolDown) :
 	Sprite(imgTurret, x, y), price(price), coolDown(coolDown) {
@@ -21,7 +21,7 @@ Turret::Turret(std::string imgTurret, float x, float y,/* float radius,*/ int pr
 }
 void Turret::Update(float deltaTime) {
 	Sprite::Update(deltaTime);
-	PlayScene* scene = getPlayScene();
+	ScenePlay* scene = getPlayScene();
 	if (!Enabled)
 		return;
 	if (Target) {
@@ -58,7 +58,7 @@ void Turret::Draw() const {
 		al_draw_filled_circle(Position.x, Position.y, CollisionRadius, al_map_rgba(0, 255, 0, 50));
 	}*/
 	Sprite::Draw();
-	/*if (PlayScene::DebugMode) {
+	/*if (ScenePlay::DebugMode) {
 		// Draw target radius.
 		al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(0, 0, 255), 2);
 	}*/

@@ -4,11 +4,11 @@
 #include <memory>
 #include "IScene.hpp"
 
-class StageSelectScene final : public Engine::IScene {
+class SceneStageSelect final : public Engine::IScene {
 private:
 	std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
 public:
-	explicit StageSelectScene() = default;
+	explicit SceneStageSelect() = default;
 	void Initialize() override;
 	void Terminate() override;
 	void PlayOnClick(int stage);

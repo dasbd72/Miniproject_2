@@ -1,23 +1,90 @@
 # Makefile for Windows
+# Ref:https://www.gnu.org/software/make/manual/html_node/index.html#Top
+ifeq ($(OS),Windows_NT)
+	detected_OS := Windows
+else
+	detected_OS := $(shell uname -s)
+endif
+########## Windows ##########
+ifeq ($(detected_OS),Windows)
 CXX = g++
-CXXFLAGS = -std=c++11 -IC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\include -O2
-LDFLAGS = -lm -Wall -Wextra
-LDLIBS = -LC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\lib -lallegro_monolith
-exe = TowerDefense.exe
-obj = Allegro5Exception.o AudioHelper.o Bullet.o Collider.o DirtyEffect.o Enemy.o ExplosionEffect.o GameEngine.o Group.o IceCreamBullet.o IControl.o Image.o ImageButton.o IObject.o IScene.o Label.o LOG.o LoseScene.o NormalEnemy.o Plane.o PlateletTurret.o PlayScene.o PockyBullet.o Point.o Resources.o SettingScene.o Slider.o SofaEnemy.o Sprite.o StageSelectScene.o Start_Scene.o StrongEnemy.o Turret.o TurretButton.o WBCellTurret.o WinScene.o main.o
-# FireBullet.o LaserBullet.o LaserTurret.o  MachineGunTurret.o MissileBullet.o MissileTurret.o PlaneEnemy.o SoldierEnemy.o TankEnemy.o
+ODIR = obj
+EXE = TowerDefense
 
-.PHONY: all clean
+SRC  := $(wildcard *.cpp)
+OBJ  := $(SRC:%.cpp=$(ODIR)\\%.o)
+IDIR = $(CURDIR)\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\include
+LDIR = $(CURDIR)\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\lib
 
-all: $(obj)
-	$(CXX) -o $(exe) $(obj) $(LDFLAGS) $(LDLIBS)
+CXXFLAGS = -std=c++11 -I$(IDIR) -O2
+LDFLAGS = -lm -Wall -Wextra -L$(LDIR) -lallegro_monolith
 
+.PHONY: all
+
+all: $(OBJ)
+	$(CXX) -o $(EXE).exe $(OBJ) $(CXXFLAGS) $(LDFLAGS)
 %.o: %.cpp
+	$(CXX) -c $< -o $(ODIR)\$@ $(CXXFLAGS)
+$(OBJ): $(ODIR)\\%.o: %.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
-
 clean:
-	del $(exe) $(obj)
+	del $(EXE).exe $(OBJ)
+run:
+	.\\$(EXE).exe
+endif
+########## Linux ##########
+ifeq ($(detected_OS),Linux)
+# sudo add-apt-repository ppa:allegro/5.2
+# sudo apt-get install liballegro*5.2 liballegro*5-dev
+# sudo apt-get update
+CXX = g++
+ODIR = obj
+EXE = TowerDefense
 
-# lm : linker option
-# make
-# g++ -o TowerDefense.exe Allegro5Exception.o AudioHelper.o Bullet.o Collider.o DirtyEffect.o Enemy.o ExplosionEffect.o GameEngine.o Group.o IceCreamBullet.o IControl.o Image.o ImageButton.o IObject.o IScene.o Label.o LOG.o LoseScene.o NormalEnemy.o Plane.o PlateletTurret.o PlayScene.o PockyBullet.o Point.o Resources.o Slider.o SofaEnemy.o Sprite.o StageSelectScene.o Start_Scene.o StrongEnemy.o Turret.o TurretButton.o WBCellTurret.o WinScene.o main.o -lm -Wall -Wextra -LC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\lib -lallegro_monolith
+SRC  := $(wildcard *.cpp)
+OBJ  := $(SRC:%.cpp=$(ODIR)/%.o)
+ALLEGRO_LIBRARIES := allegro-5 allegro_main-5 allegro_font-5 allegro_color-5 allegro_image-5 allegro_acodec-5 allegro_audio-5 allegro_dialog-5 allegro_memfile-5 allegro_physfs-5 allegro_primitives-5 allegro_ttf-5 allegro_video-5
+ALLEGRO_FLAGS := $(shell pkg-config --cflags --libs $(ALLEGRO_LIBRARIES))
+
+CXXFLAGS = -std=c++11 -O2 -m64
+LDFLAGS = -lm -Wall -Wextra
+
+.PHONY: all
+all: $(OBJ)
+	$(CXX) -o $(EXE) $(OBJ) $(ALLEGRO_FLAGS) $(CXXFLAGS) $(LDFLAGS)
+%.o: %.cpp
+	$(CXX) -c $< -o $(ODIR)/$@ $(ALLEGRO_FLAGS) $(CXXFLAGS)
+$(OBJ): $(ODIR)/%.o: %.cpp
+	$(CXX) -c $< -o $@ $(ALLEGRO_FLAGS) $(CXXFLAGS)
+clean:
+	rm $(EXE) $(OBJ)
+run:
+	./$(EXE)
+endif
+########## MacOS ##########
+ifeq ($(detected_OS),Darwin)
+# brew install make
+# brew install pkg-config
+# brew install allegro
+# brew install freetype
+CXX = g++
+ODIR = obj
+EXE = TowerDefense
+
+SRC  := $(wildcard *.cpp)
+OBJ  := $(SRC:%.cpp=$(ODIR)/%.o)
+CXXFLAGS = -std=c++11 -O2 -m64
+LDFLAGS = -lm -Wall -Wextra -lallegro -lallegro_main -lallegro_font -lallegro_color -lallegro_image -lallegro_acodec -lallegro_audio -lallegro_dialog -lallegro_memfile -lallegro_physfs -lallegro_primitives -lallegro-ttf
+
+.PHONY: all
+all: $(OBJ)
+	$(CXX) -o $(EXE) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
+%.o: %.cpp
+	$(CXX) -c $< -o $(ODIR)/$@ $(CXXFLAGS)
+$(OBJ): $(ODIR)/%.o: %.cpp
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
+clean:
+	rm -rf $(OBJ) $(EXE)
+endif
+
+

@@ -18,7 +18,7 @@ namespace Engine {
 	class Sprite;
 }  // namespace Engine
 
-class PlayScene final : public Engine::IScene {
+class ScenePlay final : public Engine::IScene {
 private:
 	enum TileType {
 		TILE_DIRT,
@@ -62,7 +62,7 @@ public:
 	std::list<std::tuple<int, float,int>> enemyWaveData;
 	std::list<int> keyStrokes;
 	static Engine::Point GetClientSize();
-	explicit PlayScene() = default;
+	explicit ScenePlay() = default;
 	void Initialize() override;
 	void Terminate() override;
 	void Update(float deltaTime) override;

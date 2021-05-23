@@ -28,6 +28,28 @@
 				"kind": "build",
 				"isDefault": true
 			}
+		},
+		{
+			"type": "shell",
+			"label": "(gdb)Build_workspaceFolder",
+			"command": "g++",
+			"args": [
+				"-g",
+                "'*.cpp'",
+                "-o",
+				"'${workspaceFolder}\\TowerDefense.exe'",
+				"-lm",
+                "-Wall",
+				"-Wextra",
+				"'-std=c++11'",
+				"-IC:\\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\\include",
+				"-LC:\\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\\lib",
+				"-lallegro_monolith"
+            ],
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
 		}
 	]
 }

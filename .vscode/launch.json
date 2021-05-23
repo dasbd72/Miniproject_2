@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(Window) build and run",
+            "name": "(Window) Towerdefense",
             "type": "cppvsdbg",
             "request": "launch",
             "preLaunchTask": "Build_workspaceFolder",
@@ -10,6 +10,20 @@
             "program": "TowerDefense.exe",
             "stopAtEntry": false,
             "console": "externalTerminal"
+        },
+        {
+            "name": "(gdb) TowerDefense",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/TowerDefense.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+            "preLaunchTask": "(gdb)Build_workspaceFolder"
         }
     ]
 }

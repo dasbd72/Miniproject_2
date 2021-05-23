@@ -12,14 +12,14 @@
 #include <utility>
 
 #include "Allegro5Exception.hpp"
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "IScene.hpp"
 #include "LOG.hpp"
 #include "Point.hpp"
 #include "Resources.hpp"
 
 namespace Engine {
-	void GameEngine::initAllegro5() {
+	void EngineGame::initAllegro5() {
 		if (!al_init()) throw Allegro5Exception("failed to initialize allegro");
 
 		// Initialize add-ons.
@@ -77,7 +77,7 @@ namespace Engine {
 		// Start the timer to update and draw the game.
 		al_start_timer(update_timer);
 	}
-	void GameEngine::startEventLoop() {
+	void EngineGame::startEventLoop() {
 		bool done = false;
 		ALLEGRO_EVENT event;
 		int redraws = 0;
@@ -159,7 +159,7 @@ namespace Engine {
 			}
 		}
 	}
-	void GameEngine::update(float deltaTime) {
+	void EngineGame::update(float deltaTime) {
 		if (!nextScene.empty()) {
 			changeScene(nextScene);
 			nextScene = "";
@@ -169,11 +169,11 @@ namespace Engine {
 			deltaTime = deltaTimeThreshold;
 		activeScene->Update(deltaTime);
 	}
-	void GameEngine::draw() const {
+	void EngineGame::draw() const {
 		activeScene->Draw();
 		al_flip_display();
 	}
-	void GameEngine::destroy() {
+	void EngineGame::destroy() {
 		// Destroy allegro5 window resources.
 		al_destroy_timer(update_timer);
 		al_destroy_event_queue(event_queue);
@@ -182,7 +182,7 @@ namespace Engine {
 		for (const auto &pair : scenes)
 			delete pair.second;
 	}
-	void GameEngine::changeScene(const std::string& name) {
+	void EngineGame::changeScene(const std::string& name) {
 		if (scenes.count(name) == 0)
 			throw std::invalid_argument("Cannot change to a unknown scene.");
 		// Terminate the old scene.
@@ -195,7 +195,7 @@ namespace Engine {
 		activeScene->Initialize();
 		LOG(INFO) << "Changed to " << name << " scene";
 	}
-	void GameEngine::Start(const std::string& firstSceneName, int fps, int screenW, int screenH,
+	void EngineGame::Start(const std::string& firstSceneName, int fps, int screenW, int screenH,
 		int reserveSamples, const char* title, const char* icon, bool freeMemoryOnSceneChanged, float deltaTimeThreshold) {
 		LOG(INFO) << "Game Initializing...";
 		// Update Allegro5 configs.
@@ -228,44 +228,44 @@ namespace Engine {
 		LOG(INFO) << "Game end";
 		destroy();
 	}
-	void GameEngine::AddNewScene(const std::string& name, IScene* scene) {
+	void EngineGame::AddNewScene(const std::string& name, IScene* scene) {
 		if (scenes.count(name) != 0)
 			throw std::invalid_argument("Cannot add scenes with the same name.");
 		scenes[name] = scene;
 	}
-	void GameEngine::ChangeScene(const std::string& name) {
+	void EngineGame::ChangeScene(const std::string& name) {
 		nextScene = name;
 	}
-	IScene* GameEngine::GetActiveScene() const {
+	IScene* EngineGame::GetActiveScene() const {
 		return activeScene;
 	}
-	IScene* GameEngine::GetScene(const std::string& name) {
+	IScene* EngineGame::GetScene(const std::string& name) {
 		if (scenes.count(name) == 0)
 			throw std::invalid_argument("Cannot get scenes that aren't added.");
 		return scenes[name];
 	}
-	Point GameEngine::GetScreenSize() const {
+	Point EngineGame::GetScreenSize() const {
 		return Point(screenW, screenH);
 	}
-	int GameEngine::GetScreenWidth() const {
+	int EngineGame::GetScreenWidth() const {
 		return screenW;
 	}
-	int GameEngine::GetScreenHeight() const {
+	int EngineGame::GetScreenHeight() const {
 		return screenH;
 	}
-	Point GameEngine::GetMousePosition() const {
+	Point EngineGame::GetMousePosition() const {
 		ALLEGRO_MOUSE_STATE state;
 		al_get_mouse_state(&state);
 		return Point(state.x, state.y);
 	}
-	bool GameEngine::IsKeyDown(int keyCode) const {
+	bool EngineGame::IsKeyDown(int keyCode) const {
 		ALLEGRO_KEYBOARD_STATE state;
 		al_get_keyboard_state(&state);
 		return al_key_down(&state, keyCode);
 	}
-	GameEngine& GameEngine::GetInstance() {
+	EngineGame& EngineGame::GetInstance() {
 		// The classic way to lazy initialize a Singleton.
-		static GameEngine instance;
+		static EngineGame instance;
 		return instance;
 	}
 }

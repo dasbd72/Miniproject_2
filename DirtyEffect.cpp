@@ -3,13 +3,13 @@
 #include <random>
 
 #include "DirtyEffect.hpp"
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IScene.hpp"
-#include "PlayScene.hpp"
+#include "ScenePlay.hpp"
 
-PlayScene* DirtyEffect::getPlayScene() {
-	return dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
+ScenePlay* DirtyEffect::getPlayScene() {
+	return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
 DirtyEffect::DirtyEffect(std::string img, float timeSpan, float x, float y) : Sprite(img, x, y), timeSpan(timeSpan), alpha(1) {
 	std::random_device dev;

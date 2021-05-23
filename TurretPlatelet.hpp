@@ -2,10 +2,10 @@
 #define PLATELETTURRET_HPP
 #include "Turret.hpp"
 
-class PlateletTurret: public Turret {
+class TurretPlatelet: public Turret {
 public:
 	static const int Price;
-    PlateletTurret(float x, float y);
+    TurretPlatelet(float x, float y);
 	void CreateBullet() override;
 	void Update(float deltaTime) override;
 };

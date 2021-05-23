@@ -3,32 +3,32 @@
 #include <string>
 
 #include "AudioHelper.hpp"
-#include "PockyBullet.hpp"
+#include "BulletPocky.hpp"
 #include "Group.hpp"
-#include "PlateletTurret.hpp"
-#include "PlayScene.hpp"
+#include "TurretPlatelet.hpp"
+#include "ScenePlay.hpp"
 #include "Point.hpp"
 #include "Enemy.hpp"
-const int PlateletTurret::Price = 50;
-PlateletTurret::PlateletTurret(float x, float y) :
+const int TurretPlatelet::Price = 50;
+TurretPlatelet::TurretPlatelet(float x, float y) :
 	Turret("play/turret-2.png", x, y, Price, 0.5) {
 	// Move center downward, since we the turret head is slightly biased upward.
 	Anchor.y += 8.0f / GetBitmapHeight();
 }
-void PlateletTurret::CreateBullet() {
+void TurretPlatelet::CreateBullet() {
 	Engine::Point diff = Engine::Point(cos(Rotation - ALLEGRO_PI / 2), sin(Rotation - ALLEGRO_PI / 2));
 	float rotation = atan2(diff.y, diff.x);
 	Engine::Point normalized = diff.Normalize();
 	Engine::Point normal = Engine::Point(-normalized.y, normalized.x);
 	// Change bullet position to the front of the gun barrel.
 	// TODO 3 (1/2): Add a Shoot Effect here.
-	getPlayScene()->BulletGroup->AddNewObject(new PockyBullet(Position + normalized * 36 - normal * 6, diff, rotation, this));
-	getPlayScene()->BulletGroup->AddNewObject(new PockyBullet(Position + normalized * 36 + normal * 6, diff, rotation, this));
+	getPlayScene()->BulletGroup->AddNewObject(new BulletPocky(Position + normalized * 36 - normal * 6, diff, rotation, this));
+	getPlayScene()->BulletGroup->AddNewObject(new BulletPocky(Position + normalized * 36 + normal * 6, diff, rotation, this));
 	AudioHelper::PlayAudio("laser.wav");
 }
-void PlateletTurret::Update(float deltaTime){
+void TurretPlatelet::Update(float deltaTime){
 	Sprite::Update(deltaTime);
-	PlayScene* scene = getPlayScene();
+	ScenePlay* scene = getPlayScene();
 	if (!Enabled)
 		return;
 	if (Target) {
@@ -42,10 +42,10 @@ void PlateletTurret::Update(float deltaTime){
 		// Lock first seen target.
 		// Can be improved by Spatial Hash, Quad Tree, ...
 		// However simply loop through all enemies is enough for this program.
-		int ty = static_cast<int>(floor(Position.y / PlayScene::BlockSize));
+		int ty = static_cast<int>(floor(Position.y / ScenePlay::BlockSize));
 		int ey;
 		for (auto& it : scene->EnemyGroup->GetObjects()) {
-            ey = static_cast<int>(floor(it->Position.y / PlayScene::BlockSize));
+            ey = static_cast<int>(floor(it->Position.y / ScenePlay::BlockSize));
 			if (it->Position.x > Position.x && ey >= ty-1 && ey <= ty +1) {
 				Target = dynamic_cast<Enemy*>(it);
 				Target->lockedTurrets.push_back(this);

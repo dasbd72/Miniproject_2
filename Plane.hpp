@@ -6,11 +6,11 @@
 
 #include "Sprite.hpp"
 
-class PlayScene;
+class ScenePlay;
 
 class Plane : public Engine::Sprite {
 protected:
-	PlayScene* getPlayScene();
+	ScenePlay* getPlayScene();
 	const float timeSpanLight = 1;
 	const float timeSpanShockwave = 1;
 	const float shockWaveRadius = 180;

@@ -1,11 +1,11 @@
 #include <allegro5/color.h>
 
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "IScene.hpp"
-#include "PlayScene.hpp"
+#include "ScenePlay.hpp"
 #include "TurretButton.hpp"
-PlayScene* TurretButton::getPlayScene() {
-	return dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
+ScenePlay* TurretButton::getPlayScene() {
+	return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
 TurretButton::TurretButton(std::string img, std::string imgIn, Engine::Sprite Turret, float x, float y, int money) :
 	ImageButton(img, imgIn, x, y), money(money), Turret(Turret) {

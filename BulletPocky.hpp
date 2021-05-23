@@ -8,9 +8,9 @@ namespace Engine {
 struct Point;
 }  // namespace Engine
 
-class PockyBullet : public Bullet {
+class BulletPocky : public Bullet {
 public:
-	explicit PockyBullet(Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent);
+	explicit BulletPocky(Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent);
 	void OnExplode(Enemy* enemy) override;
 };
 #endif // POCKYBULLET_HPP

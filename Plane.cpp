@@ -5,19 +5,19 @@
 #include "AudioHelper.hpp"
 #include "Collider.hpp"
 #include "Enemy.hpp"
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IObject.hpp"
 #include "IScene.hpp"
 #include "Plane.hpp"
-#include "PlayScene.hpp"
+#include "ScenePlay.hpp"
 #include "Point.hpp"
 #include "Resources.hpp"
 
-PlayScene* Plane::getPlayScene() {
-	return dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
+ScenePlay* Plane::getPlayScene() {
+	return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
-Plane::Plane() : Sprite("play/plane.png", -100, Engine::GameEngine::GetInstance().GetScreenHeight() / 2), stage(0), timeTicks(0) {
+Plane::Plane() : Sprite("play/plane.png", -100, Engine::EngineGame::GetInstance().GetScreenHeight() / 2), stage(0), timeTicks(0) {
 	for (int i = 1; i <= 10; i++) {
 		bmps.push_back(Engine::Resources::GetInstance().GetBitmap("play/light-" + std::to_string(i) + ".png"));
 	}
@@ -30,8 +30,8 @@ void Plane::Update(float deltaTime) {
 	switch (stage) {
 	case 0:
 		// Check if out of boundary.
-		if (!Engine::Collider::IsRectOverlap(Position - Size / 2, Position + Size / 2, Engine::Point(-100, 0), PlayScene::GetClientSize())) {
-			Position = PlayScene::GetClientSize() / 2;
+		if (!Engine::Collider::IsRectOverlap(Position - Size / 2, Position + Size / 2, Engine::Point(-100, 0), ScenePlay::GetClientSize())) {
+			Position = ScenePlay::GetClientSize() / 2;
 			Velocity = Engine::Point();
 			bmp = bmps[0];
 			Size.x = GetBitmapWidth() * minScale;

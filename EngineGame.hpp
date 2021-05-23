@@ -12,9 +12,9 @@
 namespace Engine {
 	class IScene;
 	/// <summary>
-	/// The one and only GameEngine for the entire program. Responsible for low-level initialization and window events.
+	/// The one and only EngineGame for the entire program. Responsible for low-level initialization and window events.
 	/// </summary>
-	class GameEngine final {
+	class EngineGame final {
 	private:
 		// Allegro5 settings, frames per second, screen width, screen height, maximum simultaneous audio samples.
 		int fps{}, screenW{}, screenH{}, reserveSamples{};
@@ -68,7 +68,7 @@ namespace Engine {
 		/// Note: Singleton is a class that will only be instantiated once (single instance).
 		/// Reference: Design Patterns - Singleton.
 		/// </summary>
-		explicit GameEngine() = default;
+		explicit EngineGame() = default;
 		/// <summary>
 		/// Change to another scene. Must return immediately and stop using anything initialized in
 		/// the scene. Since this call destroys everything initialized.
@@ -80,11 +80,11 @@ namespace Engine {
 		/// <summary>
 		/// Copy constructor is deleted, no copying allowed.
 		/// </summary>
-		GameEngine(GameEngine const&) = delete;
+		EngineGame(EngineGame const&) = delete;
 		/// <summary>
 		/// Copy assignment operator is deleted, no copy assignment allowed.
 		/// </summary>
-		GameEngine& operator=(GameEngine const&) = delete;
+		EngineGame& operator=(EngineGame const&) = delete;
 		/// <summary>
 		/// Start the game loop until exit, scenes should be added before starting.
 		/// </summary>
@@ -103,7 +103,7 @@ namespace Engine {
 		/// <summary>
 		/// Add a new scene to the game. Should only be called once for each scene.
 		/// Use inline-new when adding scene in order to support polymorphism,
-		/// The added scenes will be deleted by GameEngine at game end.
+		/// The added scenes will be deleted by EngineGame at game end.
 		/// </summary>
 		/// <param name="name">The unique name of your scene for later access.</param>
 		/// <param name="scene">The pointer to the scene you want to add.</param>
@@ -152,8 +152,8 @@ namespace Engine {
 		/// <summary>
 		/// Typical function to retrieve Singleton instance and supports lazy initialization.
 		/// </summary>
-		/// <returns>The Singleton instance of GameEngine.</returns>
-		static GameEngine& GetInstance();
+		/// <returns>The Singleton instance of EngineGame.</returns>
+		static EngineGame& GetInstance();
 	};
 }
 #endif // GAMEENGINE_HPP

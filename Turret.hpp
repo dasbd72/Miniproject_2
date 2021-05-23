@@ -7,7 +7,7 @@
 #include "Sprite.hpp"
 
 class Enemy;
-class PlayScene;
+class ScenePlay;
 
 class Turret: public Engine::Sprite {
 protected:
@@ -16,7 +16,7 @@ protected:
     float reload = 0;
     float rotateRadian = 2 * ALLEGRO_PI;
     std::list<Turret*>::iterator lockedTurretIterator;
-    PlayScene* getPlayScene();
+    ScenePlay* getPlayScene();
     // Reference: Design Patterns - Factory Method.
     virtual void CreateBullet() = 0;
 

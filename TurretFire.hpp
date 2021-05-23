@@ -2,10 +2,10 @@
 #define WBCELLTURRET_HPP
 #include "Turret.hpp"
 
-class WBCellTurret: public Turret {
+class TurretFire: public Turret {
 public:
 	static const int Price;
-    WBCellTurret(float x, float y);
+    TurretFire(float x, float y);
 	void CreateBullet() override;
 };
 #endif // WBCELLTURRET_HPP

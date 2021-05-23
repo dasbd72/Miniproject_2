@@ -4,11 +4,11 @@
 #include <memory>
 #include "IScene.hpp"
 
-class LoseScene final : public Engine::IScene {
+class SceneLose final : public Engine::IScene {
 private:
 	std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
 public:
-	explicit LoseScene() = default;
+	explicit SceneLose() = default;
 	void Initialize() override;
 	void Terminate() override;
 	void BackOnClick(int stage);

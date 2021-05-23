@@ -25,7 +25,7 @@ namespace Engine {
 	void Resources::ReleaseUnused() {
 		// A better way may be to count the memory usage and release unused resources
 		// when the total resource memory exceeds a certain threshold. However, we'll
-		// just keep it simple here and only release unused resources in GameEngine when
+		// just keep it simple here and only release unused resources in EngineGame when
 		// changing between scenes.
 		for (auto it = bitmaps.begin(); it != bitmaps.end();) {
 			if (it->second.use_count() == 1) {

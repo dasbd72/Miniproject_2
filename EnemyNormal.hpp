@@ -2,8 +2,8 @@
 #define NORMALENEMY_HPP
 #include "Enemy.hpp"
 
-class NormalEnemy : public Enemy {
+class EnemyNormal : public Enemy {
 public:
-	NormalEnemy(int x, int y);
+	EnemyNormal(int x, int y);
 };
 #endif // NORMALENEMY_HPP

@@ -5,11 +5,11 @@
 #include "ImageButton.hpp"
 #include "Sprite.hpp"
 
-class PlayScene;
+class ScenePlay;
 
 class TurretButton : public Engine::ImageButton {
 protected:
-    PlayScene* getPlayScene();
+    ScenePlay* getPlayScene();
 public:
 	int money;
 	// Engine::Sprite Base;

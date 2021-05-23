@@ -2,8 +2,8 @@
 #define SOFAENEMY_HPP
 #include "Enemy.hpp"
 
-class SofaEnemy : public Enemy {
+class EnemySofa : public Enemy {
 public:
-	SofaEnemy(int x, int y);
+	EnemySofa(int x, int y);
 };
 #endif // SOFAENEMY_HPP

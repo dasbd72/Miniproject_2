@@ -2,8 +2,8 @@
 #define STRONGENEMY_HPP
 #include "Enemy.hpp"
 
-class StrongEnemy : public Enemy {
+class EnemyStrong : public Enemy {
 public:
-	StrongEnemy(int x, int y);
+	EnemyStrong(int x, int y);
 };
 #endif // STRONGENEMY_HPP

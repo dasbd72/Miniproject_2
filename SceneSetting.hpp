@@ -5,11 +5,11 @@
 
 #include "IScene.hpp"
 
-class SettingScene final : public Engine::IScene {
+class SceneSetting final : public Engine::IScene {
 private:
 	std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
 public:
-	explicit SettingScene() = default;
+	explicit SceneSetting() = default;
 	void Initialize() override;
 	void Terminate() override;
 	void ReturnOnClick();

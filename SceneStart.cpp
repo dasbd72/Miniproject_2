@@ -2,17 +2,17 @@
 #include <memory>
 #include <string>
 
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "ImageButton.hpp"
 #include "Label.hpp"
 #include "Point.hpp"
 #include "Resources.hpp"
-#include "Start_Scene.hpp"
-#include "StageSelectScene.hpp"
+#include "SceneStart.hpp"
+#include "SceneStageSelect.hpp"
 
 void StartScene::Initialize() {
-    int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
-    int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
+    int w = Engine::EngineGame::GetInstance().GetScreenSize().x;
+    int h = Engine::EngineGame::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
     int halfH = h / 2;
     Engine::ImageButton* btn;
@@ -28,7 +28,7 @@ void StartScene::Terminate() {
 	IScene::Terminate();
 }
 void StartScene::PlayOnClick(int stage) {
-    Engine::GameEngine::GetInstance().ChangeScene("stage-select");
+    Engine::EngineGame::GetInstance().ChangeScene("stage-select");
 }
 
 

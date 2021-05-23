@@ -13,38 +13,38 @@
 #include "AudioHelper.hpp"
 #include "DirtyEffect.hpp"
 #include "Enemy.hpp"
-#include "GameEngine.hpp"
+#include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IObject.hpp"
 #include "Image.hpp"
 #include "Label.hpp"
-#include "NormalEnemy.hpp"
-#include "PlateletTurret.hpp"
-#include "WBCellTurret.hpp"
+#include "EnemyNormal.hpp"
+#include "TurretPlatelet.hpp"
+#include "TurretFreeze.hpp"
 #include "Plane.hpp"
-#include "PlayScene.hpp"
+#include "ScenePlay.hpp"
 #include "Resources.hpp"
-#include "SofaEnemy.hpp"
-#include "StrongEnemy.hpp"
+#include "EnemySofa.hpp"
+#include "EnemyStrong.hpp"
 #include "Sprite.hpp"
 #include "Turret.hpp"
 #include "TurretButton.hpp"
 #include "LOG.hpp"
 
 
-bool PlayScene::DebugMode = false;
-const std::vector<Engine::Point> PlayScene::directions = { Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1) };
-const int PlayScene::MapWidth = 12, PlayScene::MapHeight = 6;//50;//13;
-const int PlayScene::BlockSize = 128;
-const float PlayScene::DangerTime = 7.61;
-const int PlayScene::SpawnGridPointx = 12;
-const int PlayScene::EndGridPointx = -1;
+bool ScenePlay::DebugMode = false;
+const std::vector<Engine::Point> ScenePlay::directions = { Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1) };
+const int ScenePlay::MapWidth = 12, ScenePlay::MapHeight = 6;//50;//13;
+const int ScenePlay::BlockSize = 128;
+const float ScenePlay::DangerTime = 7.61;
+const int ScenePlay::SpawnGridPointx = 12;
+const int ScenePlay::EndGridPointx = -1;
 // TODO 4 (1/3): Set a cheat sequence here.
-const std::vector<int> PlayScene::code;
-Engine::Point PlayScene::GetClientSize() {
+const std::vector<int> ScenePlay::code;
+Engine::Point ScenePlay::GetClientSize() {
 	return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
-void PlayScene::Initialize() {
+void ScenePlay::Initialize() {
 	mapState.clear();
 	keyStrokes.clear();
 	ticks = 0;
@@ -77,13 +77,13 @@ void PlayScene::Initialize() {
 	// Start BGM.
 	bgmId = AudioHelper::PlayBGM("play.ogg");
 }
-void PlayScene::Terminate() {
+void ScenePlay::Terminate() {
 	AudioHelper::StopBGM(bgmId);
 	AudioHelper::StopSample(deathBGMInstance);
 	deathBGMInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
 	IScene::Terminate();
 }
-void PlayScene::Update(float deltaTime) {
+void ScenePlay::Update(float deltaTime) {
 	// If we use deltaTime directly, then we might have Bullet-through-paper problem.
 	// Reference: Bullet-Through-Paper
 	if (SpeedMult == 0)
@@ -135,7 +135,7 @@ void PlayScene::Update(float deltaTime) {
 		if (enemyWaveData.empty()) {
 			if (EnemyGroup->GetObjects().empty()) {
 				// Win.
-				Engine::GameEngine::GetInstance().ChangeScene("win");
+				Engine::EngineGame::GetInstance().ChangeScene("win");
 			}
 			continue;
 		}
@@ -153,13 +153,13 @@ void PlayScene::Update(float deltaTime) {
             const Engine::Point SpawnCoordinate = Engine::Point(SpawnGridPointx * BlockSize + BlockSize / 2 + dist(rng) * 15, laneNum[j] * BlockSize + BlockSize / 2);
             switch (std::get<0>(current)) {
 				case 1:
-					EnemyGroup->AddNewObject(enemy = new NormalEnemy(SpawnCoordinate.x, SpawnCoordinate.y));
+					EnemyGroup->AddNewObject(enemy = new EnemyNormal(SpawnCoordinate.x, SpawnCoordinate.y));
 					break;
 				case 2:
-					EnemyGroup->AddNewObject(enemy = new SofaEnemy(SpawnCoordinate.x, SpawnCoordinate.y));
+					EnemyGroup->AddNewObject(enemy = new EnemySofa(SpawnCoordinate.x, SpawnCoordinate.y));
 					break;
 				case 3:
-					EnemyGroup->AddNewObject(enemy = new StrongEnemy(SpawnCoordinate.x, SpawnCoordinate.y));
+					EnemyGroup->AddNewObject(enemy = new EnemyStrong(SpawnCoordinate.x, SpawnCoordinate.y));
 					break;
 					// TODO 2 (7/8): You need to modify 'resources/enemy1.txt', or 'resources/enemy2.txt' to spawn the 4th enemy.
 					//         The format is "[EnemyId] [TimeDelay] [LaneNum] [Repeat]".
@@ -172,15 +172,15 @@ void PlayScene::Update(float deltaTime) {
 		}
 	}
 	if (preview) {
-		preview->Position = Engine::GameEngine::GetInstance().GetMousePosition();
+		preview->Position = Engine::EngineGame::GetInstance().GetMousePosition();
 		// To keep responding when paused.
 		preview->Update(deltaTime);
 	}
 }
-void PlayScene::Draw() const {
+void ScenePlay::Draw() const {
 	IScene::Draw();
 }
-void PlayScene::OnMouseDown(int button, int mx, int my) {
+void ScenePlay::OnMouseDown(int button, int mx, int my) {
 	if ((button & 1) && !imgTarget->Visible && preview) {
 		// Cancel turret construct.
 		UIGroup->RemoveObject(preview->GetObjectIterator());
@@ -188,7 +188,7 @@ void PlayScene::OnMouseDown(int button, int mx, int my) {
 	}
 	IScene::OnMouseDown(button, mx, my);
 }
-void PlayScene::OnMouseMove(int mx, int my) {
+void ScenePlay::OnMouseMove(int mx, int my) {
 	IScene::OnMouseMove(mx, my);
 	const int x = mx / BlockSize;
 	const int y = my / BlockSize;
@@ -200,7 +200,7 @@ void PlayScene::OnMouseMove(int mx, int my) {
 	imgTarget->Position.x = x * BlockSize;
 	imgTarget->Position.y = y * BlockSize;
 }
-void PlayScene::OnMouseUp(int button, int mx, int my) {
+void ScenePlay::OnMouseUp(int button, int mx, int my) {
 	IScene::OnMouseUp(button, mx, my);
 	if (!imgTarget->Visible)
 		return;
@@ -239,7 +239,7 @@ void PlayScene::OnMouseUp(int button, int mx, int my) {
 		}
 	}
 }
-void PlayScene::OnKeyDown(int keyCode) {
+void ScenePlay::OnKeyDown(int keyCode) {
 	IScene::OnKeyDown(keyCode);
 	// TODO 4 (2/3): Set Tab as a code to active or de-active debug mode
 	if (keyCode) {
@@ -253,11 +253,11 @@ void PlayScene::OnKeyDown(int keyCode) {
 		EffectGroup->AddNewObject(new Plane());
 	}
 	if (keyCode == ALLEGRO_KEY_Q) {
-		// Hotkey for WBCellTurret.
+		// Hotkey for TurretFreeze.
 		UIBtnClicked(0);
 	}
 	else if (keyCode == ALLEGRO_KEY_W) {
-		// Hotkey for PlateletTurret.
+		// Hotkey for TurretPlatelet.
 		UIBtnClicked(1);
 	}
 	// TODO 2 (5/8): Make the E key to create the 3th turret.
@@ -266,7 +266,7 @@ void PlayScene::OnKeyDown(int keyCode) {
 		SpeedMult = keyCode - ALLEGRO_KEY_0;
 	}
 }
-void PlayScene::Hit() {
+void ScenePlay::Hit() {
 	if (lives) {
 		// Free resources.
 				delete TileMapGroup;
@@ -279,17 +279,17 @@ void PlayScene::Hit() {
 				delete UIGroup;
 				delete imgTarget;
 		//lose
-		Engine::GameEngine::GetInstance().ChangeScene("lose-scene");
+		Engine::EngineGame::GetInstance().ChangeScene("lose-scene");
 	}
 }
-int PlayScene::GetMoney() const {
+int ScenePlay::GetMoney() const {
 	return money;
 }
-void PlayScene::EarnMoney(int money) {
+void ScenePlay::EarnMoney(int money) {
 	this->money += money;
 	UIMoney->Text = std::string("$") + std::to_string(this->money);
 }
-void PlayScene::ReadMap() {
+void ScenePlay::ReadMap() {
 	std::string filename = std::string("resources/map") + std::to_string(MapId) + ".txt";
 	// Read map file.
 	char c;
@@ -324,7 +324,7 @@ void PlayScene::ReadMap() {
 		}
 	}
 }
-void PlayScene::ReadEnemyWave() {
+void ScenePlay::ReadEnemyWave() {
 	std::string filename = std::string("resources/enemy") + std::to_string(MapId) + ".txt";
 	// Read enemy file.
 	float type, wait, totallane,repeat; //change
@@ -336,7 +336,7 @@ void PlayScene::ReadEnemyWave() {
 	}
 	fin.close();
 }
-void PlayScene::ConstructUI() {
+void ScenePlay::ConstructUI() {
 	// Background
 	UIGroup->AddNewObject(new Engine::Image("play/sand.png", 0, 128*MapHeight, 1536, 128));
 	// Text
@@ -349,48 +349,48 @@ void PlayScene::ConstructUI() {
 	// Button 1
 	btn = new TurretButton("play/floor.png", "play/dirt.png",
 		Engine::Sprite("play/turret-1.png", 180, BlockSize*MapHeight, 0, 0, 0, 0)
-		, 170, 128*MapHeight, WBCellTurret::Price);
+		, 170, 128*MapHeight, TurretFreeze::Price);
 	// Reference: Class Member Function Pointer and std::bind.
-	btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 0));
+	btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 0));
 	UIGroup->AddNewControlObject(btn);
 
 	// Button 2
 	btn = new TurretButton("play/floor.png", "play/dirt.png",
 		Engine::Sprite("play/turret-2.png", 300, BlockSize*MapHeight, 0, 0, 0, 0)
-		, 290, 128*MapHeight, PlateletTurret::Price);
-	btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 1));
+		, 290, 128*MapHeight, TurretPlatelet::Price);
+	btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 1));
 	UIGroup->AddNewControlObject(btn);
     // TODO 2 (3/8): Create a button to support constructing the 3th tower.
 
-	int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
-	int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
+	int w = Engine::EngineGame::GetInstance().GetScreenSize().x;
+	int h = Engine::EngineGame::GetInstance().GetScreenSize().y;
 	int shift = 135 + 25;
 	dangerIndicator = new Engine::Sprite("play/benjamin.png", w - shift, h - shift);
 	dangerIndicator->Tint.a = 0;
 	UIGroup->AddNewObject(dangerIndicator);
 }
 
-void PlayScene::UIBtnClicked(int id) {
+void ScenePlay::UIBtnClicked(int id) {
 	if (preview) {
 		UIGroup->RemoveObject(preview->GetObjectIterator());
         preview = nullptr;
     }
-	if (id == 0 && money >= WBCellTurret::Price)
-		preview = new WBCellTurret(0, 0);
-	else if (id == 1 && money >= PlateletTurret::Price)
-		preview = new PlateletTurret(0, 0);
+	if (id == 0 && money >= TurretFreeze::Price)
+		preview = new TurretFreeze(0, 0);
+	else if (id == 1 && money >= TurretPlatelet::Price)
+		preview = new TurretPlatelet(0, 0);
 	// TODO 2 (4/8): On callback, create the 3th tower.
 	if (!preview)
 		return;
-	preview->Position = Engine::GameEngine::GetInstance().GetMousePosition();
+	preview->Position = Engine::EngineGame::GetInstance().GetMousePosition();
 	preview->Tint = al_map_rgba(255, 255, 255, 200);
 	preview->Enabled = false;
 	preview->Preview = true;
 	UIGroup->AddNewObject(preview);
-	OnMouseMove(Engine::GameEngine::GetInstance().GetMousePosition().x, Engine::GameEngine::GetInstance().GetMousePosition().y);
+	OnMouseMove(Engine::EngineGame::GetInstance().GetMousePosition().x, Engine::EngineGame::GetInstance().GetMousePosition().y);
 }
 
-bool PlayScene::CheckSpaceValid(int x, int y) {
+bool ScenePlay::CheckSpaceValid(int x, int y) {
 	if (x < 0 || x >= MapWidth  || y < 0 || y >= MapHeight  )
 		return false;
 	for (auto& it : EnemyGroup->GetObjects()) {
