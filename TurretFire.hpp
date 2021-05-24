@@ -4,8 +4,8 @@
 
 class TurretFire: public Turret {
 public:
-	static const int Price;
+    static const int Price;
     TurretFire(float x, float y);
-	void CreateBullet() override;
+    void CreateBullet() override;
 };
 #endif // WBCELLTURRET_HPP

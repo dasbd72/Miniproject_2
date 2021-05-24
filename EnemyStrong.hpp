@@ -4,6 +4,6 @@
 
 class EnemyStrong : public Enemy {
 public:
-	EnemyStrong(int x, int y);
+    EnemyStrong(int x, int y);
 };
 #endif // STRONGENEMY_HPP

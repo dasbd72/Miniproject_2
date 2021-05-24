@@ -11,25 +11,25 @@
 
 class SpriteObject: public Engine::Sprite {
 public:
-	enum EFFECT: signed{
-		FROZEN
-	};
-	/**
- 	@brief	Constructor
+    enum EFFECT: signed{
+        FROZEN
+    };
+    /**
+     @brief    Constructor
     @param  {string} img path
     @param  {float} x pos
     @param  {float} y pos
     */
-	explicit SpriteObject(std::string img, float x, float y);
-	/**
- 	@brief	If effect is on
+    explicit SpriteObject(std::string img, float x, float y);
+    /**
+     @brief    If effect is on
     @param  {EFFECT}effect
     */
-	int is(EFFECT effect);
+    int is(EFFECT effect);
 protected:
-	/// Set Object Of Effects
-	std::set<EFFECT> effectActived;
-	std::map<EFFECT, float> effectTimeleft;
+    /// Set Object Of Effects
+    std::set<EFFECT> effectActived;
+    std::map<EFFECT, float> effectTimeleft;
 };
 
 #endif

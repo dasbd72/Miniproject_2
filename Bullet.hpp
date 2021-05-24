@@ -13,16 +13,16 @@ struct Point;
 }  // namespace Engine
 
 class Bullet : public SpriteObject {
-	friend class Enemy;
+    friend class Enemy;
 protected:
-	float speed;
-	float damage;
-	Turret* parent;
-	ScenePlay* getPlayScene();
-	virtual void OnExplode(Enemy* enemy);
+    float speed;
+    float damage;
+    Turret* parent;
+    ScenePlay* getPlayScene();
+    virtual void OnExplode(Enemy* enemy);
 public:
-	Enemy* Target = nullptr;
-	explicit Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent);
-	void Update(float deltaTime) override;
+    Enemy* Target = nullptr;
+    explicit Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent);
+    void Update(float deltaTime) override;
 };
 #endif // BULLET_HPP

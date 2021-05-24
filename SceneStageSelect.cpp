@@ -37,9 +37,9 @@ void SceneStageSelect::Initialize() {
     bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
 }
 void SceneStageSelect::Terminate() {
-	AudioHelper::StopSample(bgmInstance);
-	bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
-	IScene::Terminate();
+    AudioHelper::StopSample(bgmInstance);
+    bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
+    IScene::Terminate();
 }
 void SceneStageSelect::PlayOnClick(int stage) {
     ScenePlay* scene = dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetScene("play"));

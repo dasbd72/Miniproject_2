@@ -4,8 +4,8 @@
 
 class TurretFreeze: public Turret {
 public:
-	static const int Price;
+    static const int Price;
     TurretFreeze(float x, float y);
-	void CreateBullet() override;
+    void CreateBullet() override;
 };
 #endif // TURRETFREEZE_HPP

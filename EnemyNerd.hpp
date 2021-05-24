@@ -4,6 +4,6 @@
 
 class EnemyNerd : public Enemy {
 public:
-	EnemyNerd(int x, int y);
+    EnemyNerd(int x, int y);
 };
 #endif // ENEMYNERD_HPP

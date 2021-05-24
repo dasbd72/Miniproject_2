@@ -6,13 +6,13 @@
 
 class SceneStageSelect final : public Engine::IScene {
 private:
-	std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
+    std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
 public:
-	explicit SceneStageSelect() = default;
-	void Initialize() override;
-	void Terminate() override;
-	void PlayOnClick(int stage);
-	void SettingOnClick();
+    explicit SceneStageSelect() = default;
+    void Initialize() override;
+    void Terminate() override;
+    void PlayOnClick(int stage);
+    void SettingOnClick();
 };
 
 #endif // STAGESELECTSCENE_HPP

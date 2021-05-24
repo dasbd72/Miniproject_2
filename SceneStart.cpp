@@ -25,7 +25,7 @@ void StartScene::Initialize() {
 
 }
 void StartScene::Terminate() {
-	IScene::Terminate();
+    IScene::Terminate();
 }
 void StartScene::PlayOnClick(int stage) {
     Engine::EngineGame::GetInstance().ChangeScene("stage-select");

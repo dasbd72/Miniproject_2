@@ -4,6 +4,6 @@
 
 class EnemyNormal : public Enemy {
 public:
-	EnemyNormal(int x, int y);
+    EnemyNormal(int x, int y);
 };
 #endif // NORMALENEMY_HPP

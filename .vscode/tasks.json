@@ -1,33 +1,33 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		// {
-		// 	"type": "shell",
-		// 	"label": "Build_workspaceFolder",
-		// 	"command": "g++",
-		// 	"args": [
-		// 		"-g",
+    "version": "2.0.0",
+    "tasks": [
+        // {
+        //     "type": "shell",
+        //     "label": "Build_workspaceFolder",
+        //     "command": "g++",
+        //     "args": [
+        //         "-g",
         //         "'*.cpp'",
         //         "-o",
-		// 		"'${workspaceFolder}\\TowerDefense.exe'",
-		// 		"-lm",
+        //         "'${workspaceFolder}\\TowerDefense.exe'",
+        //         "-lm",
         //         "-Wall",
-		// 		"-Wextra",
-		// 		"'-std=c++11'",
-		// 		"'-Iallegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\\include'",
-		// 		"-O2",
-		// 		"'-Lallegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\\lib'",
-		// 		"-lallegro_monolith",
-		// 		// "-lallegro","-lallegro_main","-lallegro_font","-lallegro_color","-lallegro_image","-lallegro_acodec","-lallegro_audio","-lallegro_dialog","-lallegro_memfile","-lallegro_physfs","-lallegro_primitives","-lallegro-debug",
-		// 		// Executing task: g++ -g '*.cpp' -o 'start.exe' -lm -Wall -Wextra '-std=c++11' -IC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\include -O2 -LC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\lib -lallegro_monolith
+        //         "-Wextra",
+        //         "'-std=c++11'",
+        //         "'-Iallegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\\include'",
+        //         "-O2",
+        //         "'-Lallegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\\lib'",
+        //         "-lallegro_monolith",
+        //         // "-lallegro","-lallegro_main","-lallegro_font","-lallegro_color","-lallegro_image","-lallegro_acodec","-lallegro_audio","-lallegro_dialog","-lallegro_memfile","-lallegro_physfs","-lallegro_primitives","-lallegro-debug",
+        //         // Executing task: g++ -g '*.cpp' -o 'start.exe' -lm -Wall -Wextra '-std=c++11' -IC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\include -O2 -LC:\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\lib -lallegro_monolith
         //     ],
-		// 	"problemMatcher": [
-		// 		"$gcc"
-		// 	],
-		// 	"group": {
-		// 		"kind": "build",
-		// 		"isDefault": true
-		// 	}
-		// }
-	]
+        //     "problemMatcher": [
+        //         "$gcc"
+        //     ],
+        //     "group": {
+        //         "kind": "build",
+        //         "isDefault": true
+        //     }
+        // }
+    ]
 }

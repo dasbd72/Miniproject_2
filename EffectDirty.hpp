@@ -8,11 +8,11 @@ class ScenePlay;
 
 class EffectDirty : public Engine::Sprite {
 protected:
-	float timeSpan;
-	float alpha;
-	ScenePlay* getPlayScene();
+    float timeSpan;
+    float alpha;
+    ScenePlay* getPlayScene();
 public:
-	EffectDirty(std::string img, float timeSpan, float x, float y);
-	void Update(float deltaTime) override;
+    EffectDirty(std::string img, float timeSpan, float x, float y);
+    void Update(float deltaTime) override;
 };
 #endif // DIRTYEFFECT_HPP

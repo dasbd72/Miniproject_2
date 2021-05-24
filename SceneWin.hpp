@@ -5,14 +5,14 @@
 
 class SceneWin final : public Engine::IScene {
 private:
-	float ticks;
-	ALLEGRO_SAMPLE_ID bgmId;
+    float ticks;
+    ALLEGRO_SAMPLE_ID bgmId;
 public:
-	explicit SceneWin() = default;
-	void Initialize() override;
-	void Terminate() override;
-	void Update(float deltaTime) override;
-	void BackOnClick(int stage);
+    explicit SceneWin() = default;
+    void Initialize() override;
+    void Terminate() override;
+    void Update(float deltaTime) override;
+    void BackOnClick(int stage);
 };
 
 #endif // WINSCENE_HPP
