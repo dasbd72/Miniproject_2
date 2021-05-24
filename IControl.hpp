@@ -4,68 +4,48 @@
 #include <utility>
 
 namespace Engine {
-	/// <summary>
-	/// The base interface class for controls that needs to process event callbacks.
-	/// </summary>
+	/// @brief The base interface class for controls that needs to process event callbacks.
+	
 	class IControl {
 		friend class Group;
 	protected:
 		// The iterator of controls linked-list when added to scene.
 		// Can make removing controls faster.
 		std::list<std::pair<bool, IControl*>>::iterator controlIterator{};
-		/// <summary>
-		/// The interface cannot be instantiated directly, must be inherited.
-		/// </summary>
+		/// @brief The interface cannot be instantiated directly, must be inherited.
 		explicit IControl() = default;
 	public:
-		/// <summary>
-		/// The default virtual destructor to support polymorphism destruction.
-		/// </summary>
+		/// @brief The default virtual destructor to support polymorphism destruction.
 		virtual ~IControl() = default;
-		/// <summary>
-		/// Copy constructor does not add a new instance to scene, they are still the same object.
-		/// </summary>
+		/// @brief Copy constructor does not add a new instance to scene, they are still the same object.
 		IControl(const IControl& other) = default;
-		/// <summary>
-		/// Copy assignment operator does not add a new instance to scene, they are still the same object.
-		/// </summary>
+		/// @brief Copy assignment operator does not add a new instance to scene, they are still the same object.
 		IControl& operator=(IControl const&) = default;
-		/// <summary>
-		/// Delegated from scene when keyboard key down.
-		/// </summary>
-		/// <param name="keyCode">The keycode of pressed key.</param>
+		/// @brief Delegated from scene when keyboard key down.
+		/// @param keyCode The keycode of pressed key.
 		virtual void OnKeyDown(int keyCode);
-		/// <summary>
-		/// Delegated from scene when keyboard key up.
-		/// </summary>
-		/// <param name="keyCode">The keycode of released key.</param>
+		/// @brief Delegated from scene when keyboard key up.
+		/// @param keyCode The keycode of released key.
 		virtual void OnKeyUp(int keyCode);
-		/// <summary>
-		/// Delegated from scene when mouse button down.
-		/// </summary>
-		/// <param name="button">The button pressed.</param>
-		/// <param name="mx">Mouse x coordinate in window space.</param>
-		/// <param name="my">Mouse y coordinate in window space.</param>
+		/// @brief Delegated from scene when mouse button down.
+		/// @param button The button pressed.
+		/// @param mx Mouse x coordinate in window space.
+		/// @param my Mouse y coordinate in window space.
 		virtual void OnMouseDown(int button, int mx, int my);
-		/// <summary>
-		/// Delegated from scene when mouse button up.
-		/// </summary>
-		/// <param name="button">The button released.</param>
-		/// <param name="mx">Mouse x coordinate in window space.</param>
-		/// <param name="my">Mouse y coordinate in window space.</param>
+		/// @brief Delegated from scene when mouse button up.
+		/// @param button The button released.
+		/// @param mx Mouse x coordinate in window space.
+		/// @param my Mouse y coordinate in window space.
 		virtual void OnMouseUp(int button, int mx, int my);
-		/// <summary>
-		/// Delegated from scene when mouse move.
-		/// </summary>
-		/// <param name="mx">Mouse x coordinate in window space.</param>
-		/// <param name="my">Mouse y coordinate in window space.</param>
+		/// @brief Delegated from scene when mouse move.
+		/// @param mx Mouse x coordinate in window space.
+		/// @param my Mouse y coordinate in window space.
 		virtual void OnMouseMove(int mx, int my);
-		/// <summary>
-		/// Delegated from scene when mouse scroll.
-		/// </summary>
-		/// <param name="mx">Mouse x coordinate in window space.</param>
-		/// <param name="my">Mouse y coordinate in window space.</param>
-		/// <param name="delta">Mouse z scroll delta value.</param>
+		/// @brief Delegated from scene when mouse scroll.
+		
+		/// @param mx Mouse x coordinate in window space.
+		/// @param my Mouse y coordinate in window space.
+		/// @param delta Mouse z scroll delta value.
 		virtual void OnMouseScroll(int mx, int my, int delta);
 	};
 }

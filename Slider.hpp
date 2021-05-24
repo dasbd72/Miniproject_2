@@ -3,9 +3,9 @@
 #include <functional>
 
 #include "Image.hpp"
-#include "ImageButton.hpp"
+#include "ButtonImage.hpp"
 
-class Slider : public Engine::ImageButton {
+class Slider : public Engine::ButtonImage {
 private:
 	Image Bar;
 	Image End1;

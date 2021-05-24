@@ -2,8 +2,9 @@
 #include <random>
 #include <string>
 
-#include "DirtyEffect.hpp"
+#include "EffectDirty.hpp"
 #include "Enemy.hpp"
+#include "EffectFrozen.hpp"
 #include "BulletIceCream.hpp"
 #include "Group.hpp"
 #include "ScenePlay.hpp"
@@ -19,6 +20,7 @@ void BulletIceCream::OnExplode(Enemy* enemy) {
 	std::random_device dev;
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<std::mt19937::result_type> dist(2, 5);
-	getPlayScene()->GroundEffectGroup->AddNewObject(new DirtyEffect("play/dirty-1.png", dist(rng), enemy->Position.x, enemy->Position.y));
+	getPlayScene()->GroundEffectGroup->AddNewObject(new EffectDirty("play/dirty-1.png", dist(rng), enemy->Position.x, enemy->Position.y));
+	getPlayScene()->EffectGroup->AddNewObject(new EffectFrozen(Position.x, Position.y));
 }
 

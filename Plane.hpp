@@ -4,11 +4,11 @@
 #include <memory>
 #include <vector>
 
-#include "Sprite.hpp"
+#include "SpriteObject.hpp"
 
 class ScenePlay;
 
-class Plane : public Engine::Sprite {
+class Plane : public SpriteObject {
 protected:
 	ScenePlay* getPlayScene();
 	const float timeSpanLight = 1;

@@ -11,12 +11,13 @@
 #include "ScenePlay.hpp"
 #include "Point.hpp"
 #include "Turret.hpp"
+#include "SpriteObject.hpp"
 
 ScenePlay* Turret::getPlayScene() {
 	return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
 Turret::Turret(std::string imgTurret, float x, float y,/* float radius,*/ int price, float coolDown) :
-	Sprite(imgTurret, x, y), price(price), coolDown(coolDown) {
+	SpriteObject(imgTurret, x, y), price(price), coolDown(coolDown) {
 	//CollisionRadius = radius;
 }
 void Turret::Update(float deltaTime) {

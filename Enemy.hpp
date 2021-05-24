@@ -5,13 +5,13 @@
 #include <string>
 
 #include "Point.hpp"
-#include "Sprite.hpp"
+#include "SpriteObject.hpp"
 
 class Bullet;
 class ScenePlay;
 class Turret;
 
-class Enemy : public Engine::Sprite {
+class Enemy : public SpriteObject {
 protected:
 	Engine::Point target;
 	float speed;

@@ -2,7 +2,8 @@
 #include <random>
 #include <string>
 
-#include "DirtyEffect.hpp"
+#include "EffectExplosion.hpp"
+#include "EffectDirty.hpp"
 #include "Enemy.hpp"
 #include "BulletPocky.hpp"
 #include "Group.hpp"
@@ -18,6 +19,7 @@ void BulletPocky::OnExplode(Enemy* enemy) {
 	std::random_device dev;
 	std::mt19937 rng(dev());
 	std::uniform_int_distribution<std::mt19937::result_type> dist(2, 10);
-	getPlayScene()->GroundEffectGroup->AddNewObject(new DirtyEffect("play/dirty-2.png", dist(rng), enemy->Position.x, enemy->Position.y));
+	getPlayScene()->GroundEffectGroup->AddNewObject(new EffectDirty("play/dirty-2.png", dist(rng), enemy->Position.x, enemy->Position.y));
+	getPlayScene()->EffectGroup->AddNewObject(new EffectExplosion(Position.x, Position.y));
 }
 

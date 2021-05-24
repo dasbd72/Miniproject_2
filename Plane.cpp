@@ -17,7 +17,7 @@
 ScenePlay* Plane::getPlayScene() {
 	return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
-Plane::Plane() : Sprite("play/plane.png", -100, Engine::EngineGame::GetInstance().GetScreenHeight() / 2), stage(0), timeTicks(0) {
+Plane::Plane() : SpriteObject("play/plane.png", -100, Engine::EngineGame::GetInstance().GetScreenHeight() / 2), stage(0), timeTicks(0) {
 	for (int i = 1; i <= 10; i++) {
 		bmps.push_back(Engine::Resources::GetInstance().GetBitmap("play/light-" + std::to_string(i) + ".png"));
 	}

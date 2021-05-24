@@ -5,6 +5,7 @@
 #include "AudioHelper.hpp"
 #include "BulletPocky.hpp"
 #include "Group.hpp"
+#include "EffectShoot.hpp"
 #include "TurretPlatelet.hpp"
 #include "ScenePlay.hpp"
 #include "Point.hpp"
@@ -22,6 +23,7 @@ void TurretPlatelet::CreateBullet() {
 	Engine::Point normal = Engine::Point(-normalized.y, normalized.x);
 	// Change bullet position to the front of the gun barrel.
 	// TODO 3 (1/2): Add a Shoot Effect here.
+	getPlayScene()->EffectGroup->AddNewObject(new EffectShoot(Position.x + cos(rotation)*50, Position.y + sin(rotation)*50));
 	getPlayScene()->BulletGroup->AddNewObject(new BulletPocky(Position + normalized * 36 - normal * 6, diff, rotation, this));
 	getPlayScene()->BulletGroup->AddNewObject(new BulletPocky(Position + normalized * 36 + normal * 6, diff, rotation, this));
 	AudioHelper::PlayAudio("laser.wav");

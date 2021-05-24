@@ -93,6 +93,8 @@
         "shared_mutex": "cpp",
         "thread": "cpp",
         "typeindex": "cpp",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "bit": "cpp",
+        "ranges": "cpp"
     }
 }

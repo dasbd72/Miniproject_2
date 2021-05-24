@@ -2,72 +2,47 @@
 #define POINT_HPP
 
 namespace Engine {
-	/// <summary>
-	/// Can be used as 2D coordinate point or 2D vector.
-	/// </summary>
+	/// @brief Can be used as 2D coordinate point or 2D vector.
 	struct Point {
 		// The coordinates of the point.
 		float x, y;
-		/// <summary>
-		/// Construct a Point with coordinate (0, 0).
-		/// </summary>
+		/// @brief Construct a Point with coordinate (0, 0).
 		explicit Point();
-		/// <summary>
-		/// Construct a Point with coordinate (x, y).
-		/// </summary>
-		/// <param name="x">X coordinate of the point</param>
-		/// <param name="y">Y coordinate of the point</param>
+		/// @brief Construct a Point with coordinate (x, y).
+		/// @param x X coordinate of the point
+		/// @param y Y coordinate of the point
 		explicit Point(float x, float y);
-		/// <summary>
-		/// Compare between Points.
-		/// </summary>
-		/// <returns>Determines whether the two Points have the same coordinate.</returns>
+		/// @brief Compare between Points.
+		/// @return Determines whether the two Points have the same coordinate.
 		bool operator==(const Point& rhs) const;
-		/// <summary>
-		/// Compare between Points.
-		/// </summary>
-		/// <returns>Determines whether the two Points have distinct coordinate.</returns>
+		/// @brief Compare between Points.
+		/// @return Determines whether the two Points have distinct coordinate.
 		bool operator!=(const Point& rhs) const;
-		/// <summary>
-		/// Add points.
-		/// </summary>
-		/// <returns>The added result.</returns>
+		/// @brief Add points.
+		/// @return The added result.
 		Point operator+(const Point& rhs) const;
-		/// <summary>
-		/// Subtract points.
-		/// </summary>
-		/// <returns>The subtracted result.</returns>
+		/// @brief Subtract points.
+		/// @return The subtracted result.
 		Point operator-(const Point& rhs) const;
-		/// <summary>
-		/// Multiply the point's coordinate with a scalar.
-		/// </summary>
-		/// <returns>The multiplied result.</returns>
+		/// @brief Multiply the point's coordinate with a scalar.
+		/// @return The multiplied result.
 		Point operator*(const float& rhs) const;
-		/// <summary>
-		/// Divide the point's coordinate with a scalar.
-		/// </summary>
-		/// <returns>The divided result.</returns>
+		/// @brief Divide the point's coordinate with a scalar.
+		/// @return The divided result.
 		Point operator/(const float& rhs) const;
-		/// <summary>
-		/// Make point act like vector and get the normalized vector.
-		/// </summary>
-		/// <returns>The normalized vector.</returns>
+		/// @brief Make point act like vector and get the normalized vector.
+		/// @return The normalized vector.
 		Point Normalize() const;
-		/// <summary>
-		/// Make point act like vector and get the inner product.
-		/// </summary>
-		/// <param name="rhs">The second vector.</param>
-		/// <returns>The inner product.</returns>
+		/// @brief Make point act like vector and get the inner product.
+		
+		/// @param rhs The second vector.
+		/// @return The inner product.
 		float Dot(const Point& rhs) const;
-		/// <summary>
-		/// Make point act like vector and get the squared magnitude.
-		/// </summary>
-		/// <returns>Squared magnitude of vector.</returns>
+		/// @brief Make point act like vector and get the squared magnitude.
+		/// @return Squared magnitude of vector.
 		float MagnitudeSquared() const;
-		/// <summary>
-		/// Make point act like vector and get the magnitude.
-		/// </summary>
-		/// <returns>Magnitude of vector.</returns>
+		/// @brief Make point act like vector and get the magnitude.
+		/// @return Magnitude of vector.
 		float Magnitude() const;
 	};
 	Point operator*(const float& lhs, const Point& rhs);

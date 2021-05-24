@@ -4,7 +4,7 @@
 #include "AudioHelper.hpp"
 #include "EngineGame.hpp"
 #include "Image.hpp"
-#include "ImageButton.hpp"
+#include "ButtonImage.hpp"
 #include "Label.hpp"
 #include "ScenePlay.hpp"
 #include "Point.hpp"
@@ -18,8 +18,8 @@ void SceneWin::Initialize() {
 	int halfH = h / 2;
 	AddNewObject(new Engine::Image("win/benjamin-sad.png", halfW, halfH, 0, 0, 0.5, 0.5));
 	AddNewObject(new Engine::Label("You Win!", "pirulen.ttf", 48, halfW, halfH / 4 + 10, 255, 255, 255, 255, 0.5, 0.5));
-	Engine::ImageButton* btn;
-	btn = new Engine::ImageButton("win/dirt.png", "win/floor.png", halfW - 200, halfH * 7 / 4 - 50, 400, 100);
+	Engine::ButtonImage* btn;
+	btn = new Engine::ButtonImage("win/dirt.png", "win/floor.png", halfW - 200, halfH * 7 / 4 - 50, 400, 100);
 	btn->SetOnClickCallback(std::bind(&SceneWin::BackOnClick, this, 2));
 	AddNewControlObject(btn);
 	AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));

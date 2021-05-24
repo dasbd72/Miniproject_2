@@ -2,7 +2,7 @@
 #define BULLET_HPP
 #include <string>
 
-#include "Sprite.hpp"
+#include "SpriteObject.hpp"
 
 class Enemy;
 class ScenePlay;
@@ -11,7 +11,7 @@ namespace Engine {
 struct Point;
 }  // namespace Engine
 
-class Bullet : public Engine::Sprite {
+class Bullet : public SpriteObject {
 protected:
 	float speed;
 	float damage;

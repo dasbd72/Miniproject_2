@@ -9,10 +9,8 @@
 
 
 namespace Engine {
-	/// <summary>
-	/// The one and only Resources for the entire program. Responsible for low-level resource loading and destroying.
+	/// @brief The one and only Resources for the entire program. Responsible for low-level resource loading and destroying.
 	/// It acts like a smart caching helper class.
-	/// </summary>
 	class Resources final {
 	private:
 		// The path prefix for loading bitmaps.
@@ -38,64 +36,42 @@ namespace Engine {
 		std::unordered_map<std::string, std::shared_ptr<ALLEGRO_SAMPLE>> samples;
 		// All (sample instance, sample) pairs are stored in hash table for easy access and management.
 		std::unordered_map<std::string, std::pair<std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>, std::shared_ptr<ALLEGRO_SAMPLE>>> sample_instance_pairs;
-		/// <summary>
-		/// Private constructor since this class is a Singleton.
-		/// </summary>
+		/// @brief Private constructor since this class is a Singleton.
 		explicit Resources();
 	public:
-		/// <summary>
-		/// Copy constructor is deleted, no copying allowed.
-		/// </summary>
+		/// @brief Copy constructor is deleted, no copying allowed.
 		Resources(Resources const&) = delete;
-		/// <summary>
-		/// Copy assignment operator is deleted, no copy assignment allowed.
-		/// </summary>
+		/// @brief Copy assignment operator is deleted, no copy assignment allowed.
 		void operator=(Resources const&) = delete;
-		/// <summary>
-		/// Release all loaded resources.
-		/// </summary>
+		/// @brief Release all loaded resources.
 		~Resources();
-		/// <summary>
-		/// Release resources that are not currently used.
-		/// </summary>
+		/// @brief Release resources that are not currently used.
 		void ReleaseUnused();
-		/// <summary>
-		/// Get bitmap pointer by name. The file should be put under "resources/images/".
-		/// </summary>
-		/// <param name="name">The filename of the image. (Including extension)</param>
-		/// <returns>The smart pointer of the bitmap.</returns>
+		/// @brief Get bitmap pointer by name. The file should be put under "resources/images/".
+		/// @param name The filename of the image. (Including extension)
+		/// @return The smart pointer of the bitmap.
 		std::shared_ptr<ALLEGRO_BITMAP> GetBitmap(std::string name);
-		/// <summary>
-		/// Get bitmap pointer by name, and resize it. The file should be put under "resources/images/".
-		/// </summary>
-		/// <param name="name">The filename of the image. (Including extension)</param>
-		/// <param name="width">The target width that we want the image to be resized to.</param>
-		/// <param name="height">The target height that we want the image to be resized to.</param>
-		/// <returns>The smart pointer of the bitmap.</returns>
+		/// @brief Get bitmap pointer by name, and resize it. The file should be put under "resources/images/".
+		/// @param name The filename of the image. (Including extension)
+		/// @param width The target width that we want the image to be resized to.
+		/// @param height The target height that we want the image to be resized to.
+		/// @return The smart pointer of the bitmap.
 		std::shared_ptr<ALLEGRO_BITMAP> GetBitmap(std::string name, int width, int height);
-		/// <summary>
-		/// Get font pointer by name. The file should be put under "resources/fonts/".
-		/// </summary>
-		/// <param name="name">The filename of the font. (Including extension)</param>
-		/// <param name="size">The font size of the font.</param>
-		/// <returns>The smart pointer of the font.</returns>
+		/// @brief Get font pointer by name. The file should be put under "resources/fonts/".
+		/// @param name The filename of the font. (Including extension)
+		/// @param size The font size of the font.
+		/// @return The smart pointer of the font.
 		std::shared_ptr<ALLEGRO_FONT> GetFont(std::string name, int fontSize);
-		/// <summary>
-		/// Get sample pointer by name. The file should be put under "resources/audios".
-		/// </summary>
-		/// <param name="name">The filename of the audio. (Including extension)</param>
-		/// <returns>The smart pointer of the sample.</returns>
+		/// @brief Get sample pointer by name. The file should be put under "resources/audios".
+		/// @param name The filename of the audio. (Including extension)
+		/// @return The smart pointer of the sample.
 		std::shared_ptr<ALLEGRO_SAMPLE> GetSample(std::string name);
-		/// <summary>
-		/// Get sample instance pointer by name. The file should be put under "resources/audios".
-		/// </summary>
-		/// <param name="name">The filename of the audio. (Including extension)</param>
-		/// <returns>The smart pointer of the sample instance.</returns>
+		/// @brief Get sample instance pointer by name. The file should be put under "resources/audios".
+		/// @param name The filename of the audio. (Including extension)
+		/// @return The smart pointer of the sample instance.
 		std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> GetSampleInstance(std::string name);
-		/// <summary>
-		/// Typical function to retrieve Singleton instance and supports lazy initialization.
-		/// </summary>
-		/// <returns>The Singleton instance of Resources.</returns>
+		/// @brief Typical function to retrieve Singleton instance and supports lazy initialization.
+		/// @return The Singleton instance of Resources.
 		static Resources& GetInstance();
 	};
 }

@@ -3,7 +3,7 @@
 #include <string>
 
 #include "EngineGame.hpp"
-#include "ImageButton.hpp"
+#include "ButtonImage.hpp"
 #include "Label.hpp"
 #include "Point.hpp"
 #include "Resources.hpp"
@@ -15,9 +15,9 @@ void StartScene::Initialize() {
     int h = Engine::EngineGame::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
     int halfH = h / 2;
-    Engine::ImageButton* btn;
+    Engine::ButtonImage* btn;
 
-    btn = new Engine::ImageButton("start_scene/out.png", "start_scene/in.png", halfW - 200, halfH , 400, 100);
+    btn = new Engine::ButtonImage("start_scene/out.png", "start_scene/in.png", halfW - 200, halfH , 400, 100);
     btn->SetOnClickCallback(std::bind(&StartScene::PlayOnClick, this, 1));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Play", "pirulen.ttf", 48, halfW, halfH +50 , 0, 0, 0, 255, 0.5, 0.5));

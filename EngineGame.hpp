@@ -6,14 +6,10 @@
 
 #include "Point.hpp"
 
-/// <summary>
-/// All general classes are under this namespace for clarity.
-/// </summary>
+/// @brief All general classes are under this namespace for clarity.
 namespace Engine {
 	class IScene;
-	/// <summary>
-	/// The one and only EngineGame for the entire program. Responsible for low-level initialization and window events.
-	/// </summary>
+	/// @brief The one and only EngineGame for the entire program. Responsible for low-level initialization and window events.
 	class EngineGame final {
 	private:
 		// Allegro5 settings, frames per second, screen width, screen height, maximum simultaneous audio samples.
@@ -40,119 +36,82 @@ namespace Engine {
 		// The scene to change to at next update.
 		std::string nextScene{};
 
-		/// <summary>
-		/// Initialize allegro5 library. Creates game window & event queue,
+		/// @brief Initialize allegro5 library. Creates game window & event queue,
 		/// install peripherals and initialize add-ons.
-		/// </summary>
+		
 		void initAllegro5();
-		/// <summary>
-		/// Process events inside the event queue using an infinity loop,
+		/// @brief Process events inside the event queue using an infinity loop,
 		/// exit when close button clicked.
-		/// </summary>
 		void startEventLoop();
-		/// <summary>
-		/// Delegate the update event to the active scene.
-		/// </summary>
-		/// <param name="deltaTime">Time elapsed since last update, can be used to calculate value changes.</param>
+		/// @brief Delegate the update event to the active scene.
+		/// @param deltaTime Time elapsed since last update, can be used to calculate value changes.
 		void update(float deltaTime);
-		/// <summary>
-		/// Delegate the draw event to the active scene.
-		/// </summary>
+		/// @brief Delegate the draw event to the active scene.
 		void draw() const;
-		/// <summary>
-		/// Release Allegro5 resources, and free all allocated scenes.
-		/// </summary>
+		/// @brief Release Allegro5 resources, and free all allocated scenes.
 		void destroy();
-		/// <summary>
-		/// Private constructor since this class is a Singleton.
+		/// @brief Private constructor since this class is a Singleton.
 		/// Note: Singleton is a class that will only be instantiated once (single instance).
 		/// Reference: Design Patterns - Singleton.
-		/// </summary>
 		explicit EngineGame() = default;
-		/// <summary>
-		/// Change to another scene. Must return immediately and stop using anything initialized in
+		/// @brief Change to another scene. Must return immediately and stop using anything initialized in
 		/// the scene. Since this call destroys everything initialized.
-		/// </summary>
-		/// <param name="name">The name of the scene you want to change to.</param>
+		/// @param name The name of the scene you want to change to.
 		void changeScene(const std::string& name);
 	public:
 		// Note: We'll ignore C++11's move constructor, move assignment operator in this project for simplicity.
-		/// <summary>
-		/// Copy constructor is deleted, no copying allowed.
-		/// </summary>
+		/// @brief Copy constructor is deleted, no copying allowed.
+		
 		EngineGame(EngineGame const&) = delete;
-		/// <summary>
-		/// Copy assignment operator is deleted, no copy assignment allowed.
-		/// </summary>
+		/// @brief Copy assignment operator is deleted, no copy assignment allowed.
+		
 		EngineGame& operator=(EngineGame const&) = delete;
-		/// <summary>
-		/// Start the game loop until exit, scenes should be added before starting.
-		/// </summary>
-		/// <param name="firstSceneName">The scene name of the first scene of the game.</param>
-		/// <param name="fps">The target frame per seconds of the game.</param>
-		/// <param name="screenW">Window screen width.</param>
-		/// <param name="screenH">Window screen height.</param>
-		/// <param name="reserveSamples">Maximum simultaneous audio samples.</param>
-		/// <param name="title">Window's title text.</param>
-		/// <param name="icon">Window's icon image path.</param>
-		/// <param name="freeMemoryOnSceneChanged">Determines whether to free memory between scenes.</param>
+		/// @brief Start the game loop until exit, scenes should be added before starting.
+		/// @param firstSceneName The scene name of the first scene of the game.
+		/// @param fps The target frame per seconds of the game.
+		/// @param screenW Window screen width.
+		/// @param screenH Window screen height.
+		/// @param reserveSamples Maximum simultaneous audio samples.
+		/// @param title Window's title text.
+		/// @param icon Window's icon image path.
+		/// @param freeMemoryOnSceneChanged Determines whether to free memory between scenes.
 		void Start(const std::string& firstSceneName, int fps = 60, int screenW = 800, int screenH = 600, int reserveSamples = 1000,
 				   const char* title = "Tower Defense (I2P(II)_2020 Mini Project 2))",
 				   const char* icon = "icon.png", bool freeMemoryOnSceneChanged = false,
 				   float deltaTimeThreshold = 0.05);
-		/// <summary>
-		/// Add a new scene to the game. Should only be called once for each scene.
+		/// @brief Add a new scene to the game. Should only be called once for each scene.
 		/// Use inline-new when adding scene in order to support polymorphism,
 		/// The added scenes will be deleted by EngineGame at game end.
-		/// </summary>
-		/// <param name="name">The unique name of your scene for later access.</param>
-		/// <param name="scene">The pointer to the scene you want to add.</param>
+		/// @param name The unique name of your scene for later access.
+		/// @param scene The pointer to the scene you want to add.
 		void AddNewScene(const std::string& name, IScene* scene);
-		/// <summary>
-		/// Change to another scene. The scene will be changed at next update.
-		/// </summary>
-		/// <param name="name">The name of the scene you want to change to.</param>
+		/// @brief Change to another scene. The scene will be changed at next update.
+		/// @param name The name of the scene you want to change to.
 		void ChangeScene(const std::string& name);
-		/// <summary>
-		/// Get the pointer of the active scene.
-		/// </summary>
-		/// <returns>Pointer to active scene.</returns>
+		/// @brief Get the pointer of the active scene.
+		/// @return Pointer to active scene.
 		IScene* GetActiveScene() const;
-		/// <summary>
-		/// Get scene by name.
-		/// </summary>
-		/// <param name="name">The scene's name.</param>
-		/// <returns>Pointer to scene.</returns>
+		/// @brief Get scene by name.
+		/// @param name The scene's name.
+		/// @return Pointer to scene.
 		IScene* GetScene(const std::string& name);
-		/// <summary>
-		/// Get screen size.
-		/// </summary>
-		/// <returns>Screen size.</returns>
+		/// @brief Get screen size.
+		/// @return Screen size.
 		Point GetScreenSize() const;
-		/// <summary>
-		/// Get screen width.
-		/// </summary>
-		/// <returns>Screen width.</returns>
+		/// @brief Get screen width.
+		/// @return Screen width.
 		int GetScreenWidth() const;
-		/// <summary>
-		/// Get screen height.
-		/// </summary>
-		/// <returns>Screen height.</returns>
+		/// @brief Get screen height.
+		/// @return Screen height.
 		int GetScreenHeight() const;
-		/// <summary>
-		/// Get mouse position.
-		/// </summary>
-		/// <returns>Get mouse position.</returns>
+		/// @brief Get mouse position.
+		/// @return Get mouse position.
 		Point GetMousePosition() const;
-		/// <summary>
-		/// Get key state.
-		/// </summary>
-		/// <returns>Returns whether key is down or not.</returns>
+		/// @brief Get key state.
+		/// @return Returns whether key is down or not.
 		bool IsKeyDown(int keyCode) const;
-		/// <summary>
-		/// Typical function to retrieve Singleton instance and supports lazy initialization.
-		/// </summary>
-		/// <returns>The Singleton instance of EngineGame.</returns>
+		/// @brief Typical function to retrieve Singleton instance and supports lazy initialization.
+		/// @return The Singleton instance of EngineGame.
 		static EngineGame& GetInstance();
 	};
 }

@@ -6,7 +6,7 @@
 
 #include "AudioHelper.hpp"
 #include "EngineGame.hpp"
-#include "ImageButton.hpp"
+#include "ButtonImage.hpp"
 #include "Label.hpp"
 #include "ScenePlay.hpp"
 #include "Point.hpp"
@@ -32,8 +32,8 @@ void SceneSetting::Initialize(){
     sliderSFX->SetOnValueChangedCallback(std::bind(&SceneSetting::SFXSlideOnValueChanged, this, std::placeholders::_1));
     AddNewControlObject(sliderSFX);
     AddNewObject(new Engine::Label("SFX: ", "pirulen.ttf", 28, 40 + halfW - 60 - 95, halfH + 50, 255, 255, 255, 255, 0.5, 0.5));
-	Engine::ImageButton* btn;
-	btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", w - 210, h - 85, 200, 75);
+	Engine::ButtonImage* btn;
+	btn = new Engine::ButtonImage("stage-select/dirt.png", "stage-select/floor.png", w - 210, h - 85, 200, 75);
     btn->SetOnClickCallback(std::bind(&SceneSetting::ReturnOnClick, this));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Return", "pirulen.ttf", 24, w - 110, h - 52, 0, 0, 0, 255, 0.5, 0.5));

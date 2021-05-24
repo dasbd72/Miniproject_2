@@ -7,7 +7,7 @@
 #include "IScene.hpp"
 #include "ScenePlay.hpp"
 #include "Point.hpp"
-#include "Sprite.hpp"
+#include "SpriteObject.hpp"
 
 ScenePlay* Bullet::getPlayScene() {
 	return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
@@ -15,7 +15,7 @@ ScenePlay* Bullet::getPlayScene() {
 void Bullet::OnExplode(Enemy* enemy) {
 }
 Bullet::Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent) :
-	Sprite(img, position.x, position.y), speed(speed), damage(damage), parent(parent) {
+	SpriteObject(img, position.x, position.y), speed(speed), damage(damage), parent(parent) {
 	Velocity = forwardDirection * speed;
 	Rotation = rotation;
 	CollisionRadius = 4;

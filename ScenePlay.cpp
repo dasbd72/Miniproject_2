@@ -11,7 +11,7 @@
 #include <numeric> 
 
 #include "AudioHelper.hpp"
-#include "DirtyEffect.hpp"
+#include "EffectDirty.hpp"
 #include "Enemy.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
@@ -19,6 +19,7 @@
 #include "Image.hpp"
 #include "Label.hpp"
 #include "EnemyNormal.hpp"
+#include "TurretFire.hpp"
 #include "TurretPlatelet.hpp"
 #include "TurretFreeze.hpp"
 #include "Plane.hpp"
@@ -26,9 +27,10 @@
 #include "Resources.hpp"
 #include "EnemySofa.hpp"
 #include "EnemyStrong.hpp"
+#include "EnemyNerd.hpp"
 #include "Sprite.hpp"
 #include "Turret.hpp"
-#include "TurretButton.hpp"
+#include "ButtonTurret.hpp"
 #include "LOG.hpp"
 
 
@@ -40,7 +42,7 @@ const float ScenePlay::DangerTime = 7.61;
 const int ScenePlay::SpawnGridPointx = 12;
 const int ScenePlay::EndGridPointx = -1;
 // TODO 4 (1/3): Set a cheat sequence here.
-const std::vector<int> ScenePlay::code;
+const std::vector<int> ScenePlay::code = {ALLEGRO_KEY_UP,ALLEGRO_KEY_UP,ALLEGRO_KEY_DOWN,ALLEGRO_KEY_DOWN,ALLEGRO_KEY_LEFT,ALLEGRO_KEY_RIGHT,ALLEGRO_KEY_ENTER};
 Engine::Point ScenePlay::GetClientSize() {
 	return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
@@ -164,6 +166,9 @@ void ScenePlay::Update(float deltaTime) {
 					// TODO 2 (7/8): You need to modify 'resources/enemy1.txt', or 'resources/enemy2.txt' to spawn the 4th enemy.
 					//         The format is "[EnemyId] [TimeDelay] [LaneNum] [Repeat]".
 					// TODO 2 (8/8): Enable the creation of the 4th enemy.
+				case 4:
+					EnemyGroup->AddNewObject(enemy = new EnemyNerd(SpawnCoordinate.x, SpawnCoordinate.y));
+					break;
 				default:
 					continue;
 			}
@@ -178,6 +183,8 @@ void ScenePlay::Update(float deltaTime) {
 	}
 }
 void ScenePlay::Draw() const {
+	UIMoney->Text = std::string("$") + std::to_string(this->money);
+	UILives->Text = std::string("Life ") + std::to_string(lives);
 	IScene::Draw();
 }
 void ScenePlay::OnMouseDown(int button, int mx, int my) {
@@ -213,7 +220,7 @@ void ScenePlay::OnMouseUp(int button, int mx, int my) {
 			// Check if valid.
 			if (!CheckSpaceValid(x, y)) {
 				Engine::Sprite* sprite;
-				GroundEffectGroup->AddNewObject(sprite = new DirtyEffect("play/target-invalid.png", 1, x * BlockSize + BlockSize / 2, y * BlockSize + BlockSize / 2));
+				GroundEffectGroup->AddNewObject(sprite = new EffectDirty("play/target-invalid.png", 1, x * BlockSize + BlockSize / 2, y * BlockSize + BlockSize / 2));
 				sprite->Rotation = 0;
 				return;
 			}
@@ -242,23 +249,38 @@ void ScenePlay::OnMouseUp(int button, int mx, int my) {
 void ScenePlay::OnKeyDown(int keyCode) {
 	IScene::OnKeyDown(keyCode);
 	// TODO 4 (2/3): Set Tab as a code to active or de-active debug mode
-	if (keyCode) {
+	keyStrokes.push_back(keyCode);
+	if (keyCode == ALLEGRO_KEY_TAB) {
 		DebugMode = !DebugMode;
 	}
 	else {
-		keyStrokes.push_back(keyCode);
 		if (keyStrokes.size() > code.size())
 			keyStrokes.pop_front();
-        // TODO 4 (3/3): Check whether the input sequence is correct
-		EffectGroup->AddNewObject(new Plane());
+		if (keyStrokes.size() == code.size()){
+			// TODO 4 (3/3): Check whether the input sequence is correct
+			bool Cheat = true;
+			auto ic=code.begin();
+			auto ik=keyStrokes.begin();
+			for(; Cheat && ic != code.end() && ik != keyStrokes.end(); ic++, ik++)
+				if(*ic != *ik) Cheat = false; 
+			if(Cheat) {
+				EffectGroup->AddNewObject(new Plane());
+				EarnMoney(10000);
+				lives += 10;
+			}
+		}
 	}
 	if (keyCode == ALLEGRO_KEY_Q) {
-		// Hotkey for TurretFreeze.
-		UIBtnClicked(0);
+		// Hotkey for TurretFire.
+		UIBtnClicked(2);
 	}
 	else if (keyCode == ALLEGRO_KEY_W) {
 		// Hotkey for TurretPlatelet.
 		UIBtnClicked(1);
+	}
+	else if (keyCode == ALLEGRO_KEY_E) {
+		// Hotkey for TurretFreeze.
+		UIBtnClicked(0);
 	}
 	// TODO 2 (5/8): Make the E key to create the 3th turret.
 	else if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9) {
@@ -267,19 +289,20 @@ void ScenePlay::OnKeyDown(int keyCode) {
 	}
 }
 void ScenePlay::Hit() {
-	if (lives) {
+	lives--;
+	if (lives <= 0) {
 		// Free resources.
-				delete TileMapGroup;
-				delete GroundEffectGroup;
-				delete DebugIndicatorGroup;
-				delete TowerGroup;
-				delete EnemyGroup;
-				delete BulletGroup;
-				delete EffectGroup;
-				delete UIGroup;
-				delete imgTarget;
+		// delete TileMapGroup;
+		// delete GroundEffectGroup;
+		// delete DebugIndicatorGroup;
+		// delete TowerGroup;
+		// delete EnemyGroup;
+		// delete BulletGroup;
+		// delete EffectGroup;
+		// delete UIGroup;
+		// delete imgTarget;
 		//lose
-		Engine::EngineGame::GetInstance().ChangeScene("lose-scene");
+		Engine::EngineGame::GetInstance().ChangeScene("lose");
 	}
 }
 int ScenePlay::GetMoney() const {
@@ -345,22 +368,29 @@ void ScenePlay::ConstructUI() {
 	UIGroup->AddNewObject(UILives = new Engine::Label(std::string("Life ") + std::to_string(lives), "pirulen.ttf", 24, 1294, 128*MapHeight+30));
 
 
-    TurretButton* btn;
-	// Button 1
-	btn = new TurretButton("play/floor.png", "play/dirt.png",
-		Engine::Sprite("play/turret-1.png", 180, BlockSize*MapHeight, 0, 0, 0, 0)
-		, 170, 128*MapHeight, TurretFreeze::Price);
+    ButtonTurret* btn;
+	// Button 1 Turret Fire
+	btn = new ButtonTurret("play/floor.png", "play/dirt.png",
+		Engine::Sprite("play/turret-3.png", 180, BlockSize*MapHeight, 0, 0, 0, 0)
+		, 170, 128*MapHeight, TurretFire::Price);
 	// Reference: Class Member Function Pointer and std::bind.
-	btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 0));
+	btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 2));
 	UIGroup->AddNewControlObject(btn);
 
-	// Button 2
-	btn = new TurretButton("play/floor.png", "play/dirt.png",
+	// Button 2 Turret Platelet
+	btn = new ButtonTurret("play/floor.png", "play/dirt.png",
 		Engine::Sprite("play/turret-2.png", 300, BlockSize*MapHeight, 0, 0, 0, 0)
 		, 290, 128*MapHeight, TurretPlatelet::Price);
 	btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 1));
 	UIGroup->AddNewControlObject(btn);
     // TODO 2 (3/8): Create a button to support constructing the 3th tower.
+	// Button 3 Turret Freeze
+	btn = new ButtonTurret("play/floor.png", "play/dirt.png",
+		Engine::Sprite("play/turret-1.png", 420, BlockSize*MapHeight, 0, 0, 0, 0)
+		, 410, 128*MapHeight, TurretFreeze::Price);
+	btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 0));
+	UIGroup->AddNewControlObject(btn);
+
 
 	int w = Engine::EngineGame::GetInstance().GetScreenSize().x;
 	int h = Engine::EngineGame::GetInstance().GetScreenSize().y;
@@ -379,6 +409,8 @@ void ScenePlay::UIBtnClicked(int id) {
 		preview = new TurretFreeze(0, 0);
 	else if (id == 1 && money >= TurretPlatelet::Price)
 		preview = new TurretPlatelet(0, 0);
+	else if (id == 2 && money >= TurretFire::Price)
+		preview = new TurretFire(0, 0);
 	// TODO 2 (4/8): On callback, create the 3th tower.
 	if (!preview)
 		return;

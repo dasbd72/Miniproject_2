@@ -9,7 +9,7 @@
 #include "ScenePlay.hpp"
 #include "Point.hpp"
 #include "Enemy.hpp"
-const int TurretFreeze::Price = 30;
+const int TurretFreeze::Price = 40;
 TurretFreeze::TurretFreeze(float x, float y) :
 	Turret("play/turret-1.png", x, y, Price, 0.5) {
 }

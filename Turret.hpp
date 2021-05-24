@@ -4,12 +4,12 @@
 #include <list>
 #include <string>
 
-#include "Sprite.hpp"
+#include "SpriteObject.hpp"
 
 class Enemy;
 class ScenePlay;
 
-class Turret: public Engine::Sprite {
+class Turret: public SpriteObject {
 protected:
     int price;
     float coolDown;
