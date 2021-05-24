@@ -15,6 +15,7 @@ class Turret;
 BulletIceCream::BulletIceCream(Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent) :
 	Bullet("play/bullet-1.png", 500, 1, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
 	// TODO 2 (1/8): You can imitate the 2 files: 'BulletFire.hpp', 'BulletFire.cpp' to create a new bullet.
+	effectActived.insert(FROZEN);
 }
 void BulletIceCream::OnExplode(Enemy* enemy) {
 	std::random_device dev;

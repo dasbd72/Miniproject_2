@@ -15,6 +15,7 @@
 #include "LOG.hpp"
 #include "ScenePlay.hpp"
 #include "Turret.hpp"
+#include "Plane.hpp"
 #include "SpriteObject.hpp"
 
 ScenePlay* Enemy::getPlayScene() {
@@ -37,8 +38,18 @@ Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float
 	Velocity = Engine::Point(speed , 0);
 	target = Engine::Point(ScenePlay::EndGridPointx , static_cast<int>(floor(Position.y / ScenePlay::BlockSize))) * ScenePlay::BlockSize + Engine::Point(ScenePlay::BlockSize / 2, ScenePlay::BlockSize / 2);
 }
-void Enemy::Hit(float damage) {
-	hp -= damage;
+void Enemy::Hit(Engine::IObject *obj) {
+	Bullet *bulletObj = dynamic_cast<Bullet*>(obj);
+	Turret *turretObj;
+	Plane *planeObj = dynamic_cast<Plane*>(obj);
+	Engine::IScene *sceneObj = dynamic_cast<Engine::IScene*>(obj);
+
+	if(sceneObj != nullptr || planeObj){
+		hp -= hp;
+	} else if(bulletObj != nullptr) {
+		hp -= bulletObj->damage;
+		if(bulletObj->is(FROZEN)) effectActived.insert(FROZEN);
+	}
 	if (hp <= 0) {
 		OnExplode();
 		// Remove all turret's reference to target.
@@ -57,7 +68,7 @@ void Enemy::Update(float deltaTime) {
 	Position.x -= Velocity.x * deltaTime;
 	Position.y += Velocity.y * deltaTime;
 	if(Position.x <= ScenePlay::EndGridPointx * ScenePlay::BlockSize + ScenePlay::BlockSize / 2){
-		Hit(hp);
+		Hit(getPlayScene());
 		getPlayScene()->Hit();
 		reachEndTime = 0;
 		return;

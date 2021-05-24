@@ -3,6 +3,7 @@
 #include <string>
 
 #include "SpriteObject.hpp"
+#include "Enemy.hpp"
 
 class Enemy;
 class ScenePlay;
@@ -12,6 +13,7 @@ struct Point;
 }  // namespace Engine
 
 class Bullet : public SpriteObject {
+	friend class Enemy;
 protected:
 	float speed;
 	float damage;

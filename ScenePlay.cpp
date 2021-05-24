@@ -84,6 +84,15 @@ void ScenePlay::Terminate() {
 	AudioHelper::StopSample(deathBGMInstance);
 	deathBGMInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
 	IScene::Terminate();
+	// delete TileMapGroup;
+	// delete GroundEffectGroup;
+	// delete DebugIndicatorGroup;
+	// delete TowerGroup;
+	// delete EnemyGroup;
+	// delete BulletGroup;
+	// delete EffectGroup;
+	// delete UIGroup;
+	// delete imgTarget;
 }
 void ScenePlay::Update(float deltaTime) {
 	// If we use deltaTime directly, then we might have Bullet-through-paper problem.
@@ -256,7 +265,7 @@ void ScenePlay::OnKeyDown(int keyCode) {
 	else {
 		if (keyStrokes.size() > code.size())
 			keyStrokes.pop_front();
-		if (keyStrokes.size() == code.size()){
+		if (keyStrokes.size() == code.size() && DebugMode){
 			// TODO 4 (3/3): Check whether the input sequence is correct
 			bool Cheat = true;
 			auto ic=code.begin();
@@ -291,16 +300,6 @@ void ScenePlay::OnKeyDown(int keyCode) {
 void ScenePlay::Hit() {
 	lives--;
 	if (lives <= 0) {
-		// Free resources.
-		// delete TileMapGroup;
-		// delete GroundEffectGroup;
-		// delete DebugIndicatorGroup;
-		// delete TowerGroup;
-		// delete EnemyGroup;
-		// delete BulletGroup;
-		// delete EffectGroup;
-		// delete UIGroup;
-		// delete imgTarget;
 		//lose
 		Engine::EngineGame::GetInstance().ChangeScene("lose");
 	}
