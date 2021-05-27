@@ -1,24 +1,46 @@
-#include <allegro5/color.h>
-#include <allegro5/allegro_primitives.h>
-#include <cmath>
-#include <utility>
+#include "Turret.hpp"
 
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/color.h>
+
+#include <cmath>
+#include <random>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "AudioHelper.hpp"
+#include "Bullet.hpp"
+#include "Collider.hpp"
+#include "EffectDirty.hpp"
 #include "Enemy.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IObject.hpp"
 #include "IScene.hpp"
-#include "ScenePlay.hpp"
 #include "Point.hpp"
-#include "Turret.hpp"
+#include "ScenePlay.hpp"
 #include "SpriteObject.hpp"
 
 ScenePlay* Turret::getPlayScene() {
     return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
-Turret::Turret(std::string imgTurret, float x, float y,/* float radius,*/ int price, float coolDown) :
-    SpriteObject(imgTurret, x, y), price(price), coolDown(coolDown) {
-    //CollisionRadius = radius;
+Turret::Turret(std::string imgTurret, float x, float y, float radius, float hp, int price, float coolDown) : SpriteObject(imgTurret, x, y), price(price), coolDown(coolDown), hp(hp) {
+    CollisionRadius = radius;
+}
+void Turret::HitBy(Engine::IObject* obj) {
+    Bullet* bulletObj = dynamic_cast<Bullet*>(obj);
+    Enemy* enemyObj = dynamic_cast<Enemy*>(obj);
+    if (enemyObj != nullptr) {
+        this->hp -= enemyObj->damage;
+    } else if (bulletObj != nullptr) {
+        if (dynamic_cast<Enemy*>(bulletObj->parent))
+            this->hp -= bulletObj->damage;
+    }
+    if (this->hp <= 0) {
+        getPlayScene()->TowerGroup->RemoveObject(objectIterator);
+        AudioHelper::PlayAudio("explosion.wav");
+    }
 }
 void Turret::Update(float deltaTime) {
     Sprite::Update(deltaTime);
@@ -26,7 +48,7 @@ void Turret::Update(float deltaTime) {
     if (!Enabled)
         return;
     if (Target) {
-        if (Target->Position.x < Position.x&& Target->Position.y >= Position.y  && Target->Position.y < Position.y+scene->BlockSize) {
+        if (Target->Position.x < Position.x && Target->Position.y >= Position.y && Target->Position.y < Position.y + scene->BlockSize) {
             Target->lockedTurrets.erase(lockedTurretIterator);
             Target = nullptr;
             lockedTurretIterator = std::list<Turret*>::iterator();
@@ -44,7 +66,7 @@ void Turret::Update(float deltaTime) {
         // Can be improved by Spatial Hash, Quad Tree, ...
         // However simply loop through all enemies is enough for this program.
         for (auto& it : scene->EnemyGroup->GetObjects()) {
-            if (it->Position.x > Position.x && it->Position.y >= Position.y  && it->Position.y < Position.y+scene->BlockSize) {
+            if (it->Position.x > Position.x && it->Position.y >= Position.y && it->Position.y < Position.y + scene->BlockSize) {
                 Target = dynamic_cast<Enemy*>(it);
                 Target->lockedTurrets.push_back(this);
                 lockedTurretIterator = std::prev(Target->lockedTurrets.end());
@@ -52,17 +74,26 @@ void Turret::Update(float deltaTime) {
             }
         }
     }
-
+}
+void Turret::OnExplode() {
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> distId(1, 3);
+    std::uniform_int_distribution<std::mt19937::result_type> dist(1, 20);
+    for (int i = 0; i < 10; i++) {
+        // Random add 10 dirty effects.
+        getPlayScene()->GroundEffectGroup->AddNewObject(new EffectDirty("play/dirty-" + std::to_string(distId(rng)) + ".png", dist(rng), Position.x, Position.y));
+    }
 }
 void Turret::Draw() const {
-    /*if (Preview) {
-        al_draw_filled_circle(Position.x, Position.y, CollisionRadius, al_map_rgba(0, 255, 0, 50));
-    }*/
+    // if (Preview) {
+    //     al_draw_filled_circle(Position.x, Position.y, CollisionRadius, al_map_rgba(0, 255, 0, 50));
+    // }
     Sprite::Draw();
-    /*if (ScenePlay::DebugMode) {
+    if (ScenePlay::DebugMode) {
         // Draw target radius.
         al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(0, 0, 255), 2);
-    }*/
+    }
 }
 int Turret::GetPrice() const {
     return price;

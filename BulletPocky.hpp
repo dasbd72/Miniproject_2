@@ -9,8 +9,8 @@ struct Point;
 }  // namespace Engine
 
 class BulletPocky : public Bullet {
-public:
-    explicit BulletPocky(Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent);
-    void OnExplode(Enemy* enemy) override;
+   public:
+    explicit BulletPocky(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent);
+    void OnExplode(SpriteObject* spriteObj) override;
 };
-#endif // POCKYBULLET_HPP
+#endif  // POCKYBULLET_HPP

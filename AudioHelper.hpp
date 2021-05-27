@@ -1,14 +1,15 @@
 #ifndef AUDIOHELPER_HPP
 #define AUDIOHELPER_HPP
 #include <allegro5/allegro_audio.h>
-#include <string>
-#include <memory>
 
+#include <memory>
+#include <string>
 
 class AudioHelper {
-private:
+   private:
     AudioHelper() = default;
-public:
+
+   public:
     static float BGMVolume;
     static float SFXVolume;
     static ALLEGRO_SAMPLE_ID PlayAudio(const std::string& audio);
@@ -20,4 +21,4 @@ public:
     static void ChangeSamplePosition(std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> sample_instance, float position);
     static unsigned int GetSampleLength(std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> sample_instance);
 };
-#endif // AUDIOHELPER_HPP
+#endif  // AUDIOHELPER_HPP

@@ -1,8 +1,10 @@
+#include "EffectDirty.hpp"
+
 #include <allegro5/base.h>
 #include <allegro5/color.h>
+
 #include <random>
 
-#include "EffectDirty.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IScene.hpp"
@@ -23,7 +25,7 @@ void EffectDirty::Update(float deltaTime) {
         getPlayScene()->GroundEffectGroup->RemoveObject(objectIterator);
         return;
     }
-    unsigned char r, g ,b, a = alpha * 255;
+    unsigned char r, g, b, a = alpha * 255;
     al_unmap_rgb(Tint, &r, &g, &b);
     Tint = al_map_rgba(r, g, b, a);
     Sprite::Update(deltaTime);

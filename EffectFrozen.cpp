@@ -1,12 +1,13 @@
+#include "EffectFrozen.hpp"
+
 #include <cmath>
 #include <string>
 
-#include "EffectFrozen.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IScene.hpp"
-#include "ScenePlay.hpp"
 #include "Resources.hpp"
+#include "ScenePlay.hpp"
 ScenePlay* EffectFrozen::getPlayScene() {
     return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }

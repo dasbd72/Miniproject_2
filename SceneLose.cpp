@@ -1,17 +1,18 @@
+#include "SceneLose.hpp"
+
 #include <functional>
 #include <string>
 
 #include "AudioHelper.hpp"
+#include "ButtonImage.hpp"
 #include "EngineGame.hpp"
 #include "Image.hpp"
-#include "ButtonImage.hpp"
 #include "Label.hpp"
-#include "SceneLose.hpp"
-#include "ScenePlay.hpp"
 #include "Point.hpp"
+#include "ScenePlay.hpp"
 
 void SceneLose::Initialize() {
-    // TODO 1 (2/3): You can imitate the 2 files: 'SceneLose.hpp', 'SceneLose.cpp' to implement your setting scene.
+    // nTODO 1 (2/3): You can imitate the 2 files: 'SceneLose.hpp', 'SceneLose.cpp' to implement your setting scene.
     int w = Engine::EngineGame::GetInstance().GetScreenSize().x;
     int h = Engine::EngineGame::GetInstance().GetScreenSize().y;
     int halfW = w / 2;

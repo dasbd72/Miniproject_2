@@ -2,8 +2,8 @@
 #define BULLET_HPP
 #include <string>
 
-#include "SpriteObject.hpp"
 #include "Enemy.hpp"
+#include "SpriteObject.hpp"
 
 class Enemy;
 class ScenePlay;
@@ -14,15 +14,23 @@ struct Point;
 
 class Bullet : public SpriteObject {
     friend class Enemy;
-protected:
+    friend class Turret;
+
+   protected:
     float speed;
     float damage;
-    Turret* parent;
+    SpriteObject* parent;
     ScenePlay* getPlayScene();
-    virtual void OnExplode(Enemy* enemy);
-public:
+    virtual void OnExplode(SpriteObject* spriteObj);
+
+   public:
     Enemy* Target = nullptr;
-    explicit Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent);
+    explicit Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent);
+    /**
+     * @brief Update overridden
+     * 
+     * @param deltaTime 
+     */
     void Update(float deltaTime) override;
 };
-#endif // BULLET_HPP
+#endif  // BULLET_HPP

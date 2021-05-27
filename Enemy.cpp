@@ -1,5 +1,8 @@
+#include "Enemy.hpp"
+
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/color.h>
+
 #include <cmath>
 #include <random>
 #include <string>
@@ -7,19 +10,19 @@
 
 #include "AudioHelper.hpp"
 #include "Bullet.hpp"
-#include "Enemy.hpp"
+#include "Collider.hpp"
 #include "EffectDirty.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IScene.hpp"
 #include "LOG.hpp"
-#include "ScenePlay.hpp"
-#include "Turret.hpp"
 #include "Plane.hpp"
+#include "ScenePlay.hpp"
 #include "SpriteObject.hpp"
+#include "Turret.hpp"
 
-ScenePlay* Enemy::getPlayScene() {
-    return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
+ScenePlay *Enemy::getPlayScene() {
+    return dynamic_cast<ScenePlay *>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
 void Enemy::OnExplode() {
     std::random_device dev;
@@ -31,31 +34,31 @@ void Enemy::OnExplode() {
         getPlayScene()->GroundEffectGroup->AddNewObject(new EffectDirty("play/dirty-" + std::to_string(distId(rng)) + ".png", dist(rng), Position.x, Position.y));
     }
 }
-Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money) :
-    SpriteObject(img, x, y), speed(speed), hp(hp), money(money) {
+Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money, float damage, float atkRadius) : SpriteObject(img, x, y), speed(speed), hp(hp), money(money), damage(damage), atkRadius(atkRadius) {
     CollisionRadius = radius;
     reachEndTime = 0;
-    Velocity = Engine::Point(speed , 0);
-    target = Engine::Point(ScenePlay::EndGridPointx , static_cast<int>(floor(Position.y / ScenePlay::BlockSize))) * ScenePlay::BlockSize + Engine::Point(ScenePlay::BlockSize / 2, ScenePlay::BlockSize / 2);
+    Velocity = Engine::Point(speed, 0);
+    target = Engine::Point(ScenePlay::EndGridPointx, static_cast<int>(floor(Position.y / ScenePlay::BlockSize))) * ScenePlay::BlockSize + Engine::Point(ScenePlay::BlockSize / 2, ScenePlay::BlockSize / 2);
 }
-void Enemy::Hit(Engine::IObject *obj) {
-    Bullet *bulletObj = dynamic_cast<Bullet*>(obj);
-    Turret *turretObj;
-    Plane *planeObj = dynamic_cast<Plane*>(obj);
-    Engine::IScene *sceneObj = dynamic_cast<Engine::IScene*>(obj);
+void Enemy::HitBy(Engine::IObject *obj) {
 
-    if(sceneObj != nullptr || planeObj){
+    Bullet *bulletObj = dynamic_cast<Bullet *>(obj);
+    Turret *turretObj = dynamic_cast<Turret *>(obj);
+    Plane *planeObj = dynamic_cast<Plane *>(obj);
+    Engine::IScene *sceneObj = dynamic_cast<Engine::IScene *>(obj);
+
+    if (sceneObj != nullptr || planeObj != nullptr || turretObj != nullptr) {
         hp -= hp;
-    } else if(bulletObj != nullptr) {
+    } else if (bulletObj != nullptr) {
         hp -= bulletObj->damage;
-        if(bulletObj->is(FROZEN)) effectActived.insert(FROZEN);
+        if (bulletObj->hasEffect(FROZEN)) addEffect(FROZEN, 2);
     }
     if (hp <= 0) {
         OnExplode();
         // Remove all turret's reference to target.
-        for (auto& it: lockedTurrets)
+        for (auto &it : lockedTurrets)
             it->Target = nullptr;
-        for (auto& it: lockedBullets)
+        for (auto &it : lockedBullets)
             it->Target = nullptr;
         getPlayScene()->EarnMoney(money);
         getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
@@ -63,13 +66,28 @@ void Enemy::Hit(Engine::IObject *obj) {
     }
 }
 void Enemy::Update(float deltaTime) {
+    SpriteObject::updateEffect(deltaTime);
     float remainSpeed = speed * deltaTime;
-    Velocity = Engine::Point(speed * (is(FROZEN)?0.75:1) , 0);
+    ScenePlay *scene = getPlayScene();
+
+    // Enemy hit turret
+    for (auto &it : scene->TowerGroup->GetObjects()) {
+        Turret *turret = dynamic_cast<Turret *>(it);
+        if (!turret->Visible)
+            continue;
+        if (Engine::Collider::IsCircleOverlap(Position, CollisionRadius, turret->Position, turret->CollisionRadius)) {
+            turret->HitBy(this);
+            this->HitBy(turret);
+            return;
+        }
+    }
+
+    Velocity = Engine::Point(speed * (hasEffect(FROZEN) ? 0.25 : 1), 0);
     Position.x -= Velocity.x * deltaTime;
     Position.y += Velocity.y * deltaTime;
-    if(Position.x <= ScenePlay::EndGridPointx * ScenePlay::BlockSize + ScenePlay::BlockSize / 2){
-        Hit(getPlayScene());
-        getPlayScene()->Hit();
+    if (Position.x <= ScenePlay::EndGridPointx * ScenePlay::BlockSize + ScenePlay::BlockSize / 2) {
+        HitBy(getPlayScene());
+        getPlayScene()->HitBy();
         reachEndTime = 0;
         return;
     }

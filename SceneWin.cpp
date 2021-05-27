@@ -1,14 +1,15 @@
+#include "SceneWin.hpp"
+
 #include <functional>
 #include <string>
 
 #include "AudioHelper.hpp"
+#include "ButtonImage.hpp"
 #include "EngineGame.hpp"
 #include "Image.hpp"
-#include "ButtonImage.hpp"
 #include "Label.hpp"
-#include "ScenePlay.hpp"
 #include "Point.hpp"
-#include "SceneWin.hpp"
+#include "ScenePlay.hpp"
 
 void SceneWin::Initialize() {
     ticks = 0;

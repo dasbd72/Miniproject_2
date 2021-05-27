@@ -20,7 +20,8 @@ CXXFLAGS = -std=c++17 -I$(IDIR)
 LDFLAGS = -lm -Wall -Wextra -L$(LDIR) -lallegro -lallegro_main -lallegro_font -lallegro_color -lallegro_image -lallegro_acodec -lallegro_audio -lallegro_dialog -lallegro_memfile -lallegro_physfs -lallegro_primitives -lallegro_ttf
 # -lallegro_monolith
 
-.PHONY: all dbg clean run run-dbg
+.PHONY: all dbg clean run run-dbg makeObjDir
+
 all: $(OBJ)
 	$(CXX) -o $(EXE).exe $(OBJ) -O2 $(CXXFLAGS) $(LDFLAGS)
 %.o: %.cpp
@@ -71,21 +72,20 @@ endif
 ########## MacOS ##########
 ifeq ($(detected_OS),Darwin)
 # brew install make
-# brew install pkg-config
 # brew install allegro
-# brew install freetype
 CXX = g++
 ODIR = obj
 EXE = TowerDefense
 
 SRC  := $(wildcard *.cpp)
 OBJ  := $(SRC:%.cpp=$(ODIR)/%.o)
-CXXFLAGS = -std=c++11 -O2 -m64
-LDFLAGS = -lm -Wall -Wextra -lallegro -lallegro_main -lallegro_font -lallegro_color -lallegro_image -lallegro_acodec -lallegro_audio -lallegro_dialog -lallegro_memfile -lallegro_physfs -lallegro_primitives -lallegro_ttf
+CXXFLAGS = -std=c++11 -O2 `pkg-config allegro-5 --cflags`
+LDFLAGS = -lm -Wall -Wextra
+LDLIBS = `pkg-config allegro-5 allegro_acodec-5 allegro_audio-5 allegro_color-5 allegro_dialog-5 allegro_font-5 allegro_image-5 allegro_main-5 allegro_memfile-5 allegro_physfs-5 allegro_primitives-5 allegro_ttf-5 allegro_video-5 --libs`
 
-.PHONY: all
+.PHONY: all clean
 all: $(OBJ)
-	$(CXX) -o $(EXE) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) -o $(EXE) $(OBJ) $(LDFLAGS) $(LDLIBS)
 %.o: %.cpp
 	$(CXX) -c $< -o $(ODIR)/$@ $(CXXFLAGS)
 $(OBJ): $(ODIR)/%.o: %.cpp
@@ -93,5 +93,3 @@ $(OBJ): $(ODIR)/%.o: %.cpp
 clean:
 	rm -rf $(OBJ) $(EXE)
 endif
-
-

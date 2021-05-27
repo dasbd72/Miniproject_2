@@ -1,14 +1,14 @@
+#include "ButtonTurret.hpp"
+
 #include <allegro5/color.h>
 
 #include "EngineGame.hpp"
 #include "IScene.hpp"
 #include "ScenePlay.hpp"
-#include "ButtonTurret.hpp"
 ScenePlay* ButtonTurret::getPlayScene() {
     return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
-ButtonTurret::ButtonTurret(std::string img, std::string imgIn, Engine::Sprite Turret, float x, float y, int money) :
-    ButtonImage(img, imgIn, x, y), money(money), Turret(Turret) {
+ButtonTurret::ButtonTurret(std::string img, std::string imgIn, Engine::Sprite Turret, float x, float y, int money) : ButtonImage(img, imgIn, x, y), money(money), Turret(Turret) {
 }
 //ButtonTurret::ButtonTurret(std::string img, std::string imgIn, Engine::Sprite Base, Engine::Sprite Turret, float x, float y, int money) :
 //    ButtonImage(img, imgIn, x, y), money(money), Base(Base), Turret(Turret) {

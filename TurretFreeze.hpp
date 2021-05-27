@@ -2,10 +2,10 @@
 #define TURRETFREEZE_HPP
 #include "Turret.hpp"
 
-class TurretFreeze: public Turret {
-public:
+class TurretFreeze : public Turret {
+   public:
     static const int Price;
     TurretFreeze(float x, float y);
     void CreateBullet() override;
 };
-#endif // TURRETFREEZE_HPP
+#endif  // TURRETFREEZE_HPP

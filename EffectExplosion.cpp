@@ -1,13 +1,14 @@
+#include "EffectExplosion.hpp"
+
 #include <cmath>
 #include <string>
 
-#include "EffectExplosion.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IScene.hpp"
-#include "ScenePlay.hpp"
 #include "Resources.hpp"
-// TODO 3 (2/2): You can imitate the 2 files: '"EffectExplosion.hpp', '"EffectExplosion.cpp' to create a Shoot Effect.
+#include "ScenePlay.hpp"
+// nTODO 3 (2/2): You can imitate the 2 files: '"EffectExplosion.hpp', '"EffectExplosion.cpp' to create a Shoot Effect.
 ScenePlay* EffectExplosion::getPlayScene() {
     return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }

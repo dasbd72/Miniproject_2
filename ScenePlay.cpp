@@ -1,48 +1,49 @@
+#include "ScenePlay.hpp"
+
 #include <allegro5/allegro.h>
+
 #include <algorithm>
-#include <random>
 #include <cmath>
 #include <fstream>
 #include <functional>
-#include <vector>
-#include <queue>
-#include <string>
 #include <memory>
-#include <numeric> 
+#include <numeric>
+#include <queue>
+#include <random>
+#include <string>
+#include <vector>
 
 #include "AudioHelper.hpp"
+#include "ButtonTurret.hpp"
 #include "EffectDirty.hpp"
 #include "Enemy.hpp"
+#include "EnemyNerd.hpp"
+#include "EnemyNormal.hpp"
+#include "EnemySofa.hpp"
+#include "EnemyStrong.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IObject.hpp"
 #include "Image.hpp"
+#include "LOG.hpp"
 #include "Label.hpp"
-#include "EnemyNormal.hpp"
-#include "TurretFire.hpp"
-#include "TurretPlatelet.hpp"
-#include "TurretFreeze.hpp"
 #include "Plane.hpp"
-#include "ScenePlay.hpp"
 #include "Resources.hpp"
-#include "EnemySofa.hpp"
-#include "EnemyStrong.hpp"
-#include "EnemyNerd.hpp"
 #include "Sprite.hpp"
 #include "Turret.hpp"
-#include "ButtonTurret.hpp"
-#include "LOG.hpp"
-
+#include "TurretFire.hpp"
+#include "TurretFreeze.hpp"
+#include "TurretPlatelet.hpp"
 
 bool ScenePlay::DebugMode = false;
-const std::vector<Engine::Point> ScenePlay::directions = { Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1) };
-const int ScenePlay::MapWidth = 12, ScenePlay::MapHeight = 6;//50;//13;
+const std::vector<Engine::Point> ScenePlay::directions = {Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1)};
+const int ScenePlay::MapWidth = 12, ScenePlay::MapHeight = 6;  //50;//13;
 const int ScenePlay::BlockSize = 128;
 const float ScenePlay::DangerTime = 7.61;
 const int ScenePlay::SpawnGridPointx = 12;
 const int ScenePlay::EndGridPointx = -1;
-// TODO 4 (1/3): Set a cheat sequence here.
-const std::vector<int> ScenePlay::code = {ALLEGRO_KEY_UP,ALLEGRO_KEY_UP,ALLEGRO_KEY_DOWN,ALLEGRO_KEY_DOWN,ALLEGRO_KEY_LEFT,ALLEGRO_KEY_RIGHT,ALLEGRO_KEY_ENTER};
+// nTODO 4 (1/3): Set a cheat sequence here.
+const std::vector<int> ScenePlay::code = {ALLEGRO_KEY_UP, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, ALLEGRO_KEY_DOWN, ALLEGRO_KEY_LEFT, ALLEGRO_KEY_RIGHT, ALLEGRO_KEY_ENTER};
 Engine::Point ScenePlay::GetClientSize() {
     return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
@@ -51,7 +52,7 @@ void ScenePlay::Initialize() {
     keyStrokes.clear();
     ticks = 0;
     deathCountDown = -1;
-    lives = 10;
+    lives = 10000;
     money = 150;
     SpeedMult = 1;
     laneNum = std::vector<int>(MapHeight);
@@ -151,7 +152,7 @@ void ScenePlay::Update(float deltaTime) {
             continue;
         }
         auto current = enemyWaveData.front();
-        if (ticks < std::get<1>(current))//change
+        if (ticks < std::get<1>(current))  //change
             continue;
         ticks -= std::get<1>(current);
         enemyWaveData.pop_front();
@@ -160,7 +161,7 @@ void ScenePlay::Update(float deltaTime) {
         std::shuffle(laneNum.begin(), laneNum.end(), rng);
         std::uniform_int_distribution<std::mt19937::result_type> dist(1, 3);
         Enemy* enemy;
-        for(int j = 0 ; j < std::get<2>(current) ; j++){
+        for (int j = 0; j < std::get<2>(current); j++) {
             const Engine::Point SpawnCoordinate = Engine::Point(SpawnGridPointx * BlockSize + BlockSize / 2 + dist(rng) * 15, laneNum[j] * BlockSize + BlockSize / 2);
             switch (std::get<0>(current)) {
                 case 1:
@@ -172,9 +173,9 @@ void ScenePlay::Update(float deltaTime) {
                 case 3:
                     EnemyGroup->AddNewObject(enemy = new EnemyStrong(SpawnCoordinate.x, SpawnCoordinate.y));
                     break;
-                    // TODO 2 (7/8): You need to modify 'resources/enemy1.txt', or 'resources/enemy2.txt' to spawn the 4th enemy.
+                    // nTODO 2 (7/8): You need to modify 'resources/enemy1.txt', or 'resources/enemy2.txt' to spawn the 4th enemy.
                     //         The format is "[EnemyId] [TimeDelay] [LaneNum] [Repeat]".
-                    // TODO 2 (8/8): Enable the creation of the 4th enemy.
+                    // nTODO 2 (8/8): Enable the creation of the 4th enemy.
                 case 4:
                     EnemyGroup->AddNewObject(enemy = new EnemyNerd(SpawnCoordinate.x, SpawnCoordinate.y));
                     break;
@@ -256,23 +257,23 @@ void ScenePlay::OnMouseUp(int button, int mx, int my) {
     }
 }
 void ScenePlay::OnKeyDown(int keyCode) {
+    Engine::LOG(Engine::INFO) << keyCode;
     IScene::OnKeyDown(keyCode);
-    // TODO 4 (2/3): Set Tab as a code to active or de-active debug mode
+    // nTODO 4 (2/3): Set Tab as a code to active or de-active debug mode
     keyStrokes.push_back(keyCode);
+    if (keyStrokes.size() > code.size())
+        keyStrokes.pop_front();
     if (keyCode == ALLEGRO_KEY_TAB) {
         DebugMode = !DebugMode;
-    }
-    else {
-        if (keyStrokes.size() > code.size())
-            keyStrokes.pop_front();
-        if (keyStrokes.size() == code.size() && DebugMode){
-            // TODO 4 (3/3): Check whether the input sequence is correct
+    } else {
+        if (keyStrokes.size() == code.size() && DebugMode) {
+            // nTODO 4 (3/3): Check whether the input sequence is correct
             bool Cheat = true;
-            auto ic=code.begin();
-            auto ik=keyStrokes.begin();
-            for(; Cheat && ic != code.end() && ik != keyStrokes.end(); ic++, ik++)
-                if(*ic != *ik) Cheat = false; 
-            if(Cheat) {
+            auto ic = code.begin();
+            auto ik = keyStrokes.begin();
+            for (; Cheat && ic != code.end() && ik != keyStrokes.end(); ic++, ik++)
+                if (*ic != *ik) Cheat = false;
+            if (Cheat) {
                 EffectGroup->AddNewObject(new Plane());
                 EarnMoney(10000);
                 lives += 10;
@@ -282,22 +283,20 @@ void ScenePlay::OnKeyDown(int keyCode) {
     if (keyCode == ALLEGRO_KEY_Q) {
         // Hotkey for TurretFire.
         UIBtnClicked(2);
-    }
-    else if (keyCode == ALLEGRO_KEY_W) {
+    } else if (keyCode == ALLEGRO_KEY_W) {
         // Hotkey for TurretPlatelet.
         UIBtnClicked(1);
-    }
-    else if (keyCode == ALLEGRO_KEY_E) {
+    } else if (keyCode == ALLEGRO_KEY_E) {
         // Hotkey for TurretFreeze.
         UIBtnClicked(0);
     }
-    // TODO 2 (5/8): Make the E key to create the 3th turret.
+    // nTODO 2 (5/8): Make the E key to create the 3th turret.
     else if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9) {
         // Hotkey for Speed up.
         SpeedMult = keyCode - ALLEGRO_KEY_0;
     }
 }
-void ScenePlay::Hit() {
+void ScenePlay::HitBy() {
     lives--;
     if (lives <= 0) {
         //lose
@@ -319,14 +318,19 @@ void ScenePlay::ReadMap() {
     std::ifstream fin(filename);
     while (fin >> c) {
         switch (c) {
-        case '0': mapData.push_back(false); break;
-        case '1': mapData.push_back(true); break;
-        case '\n':
-        case '\r':
-            if (static_cast<int>(mapData.size()) / MapWidth != 0)
+            case '0':
+                mapData.push_back(false);
+                break;
+            case '1':
+                mapData.push_back(true);
+                break;
+            case '\n':
+            case '\r':
+                if (static_cast<int>(mapData.size()) / MapWidth != 0)
+                    throw std::ios_base::failure("Map data is corrupted.");
+                break;
+            default:
                 throw std::ios_base::failure("Map data is corrupted.");
-            break;
-        default: throw std::ios_base::failure("Map data is corrupted.");
         }
     }
     fin.close();
@@ -349,7 +353,7 @@ void ScenePlay::ReadMap() {
 void ScenePlay::ReadEnemyWave() {
     std::string filename = std::string("resources/enemy") + std::to_string(MapId) + ".txt";
     // Read enemy file.
-    float type, wait, totallane,repeat; //change
+    float type, wait, totallane, repeat;  //change
     enemyWaveData.clear();
     std::ifstream fin(filename);
     while (fin >> type && fin >> wait && fin >> totallane && fin >> repeat) {
@@ -360,36 +364,31 @@ void ScenePlay::ReadEnemyWave() {
 }
 void ScenePlay::ConstructUI() {
     // Background
-    UIGroup->AddNewObject(new Engine::Image("play/sand.png", 0, 128*MapHeight, 1536, 128));
+    UIGroup->AddNewObject(new Engine::Image("play/sand.png", 0, 128 * MapHeight, 1536, 128));
     // Text
     //UIGroup->AddNewObject(new Engine::Label(std::string("Stage ") + std::to_string(MapId), "pirulen.ttf", 32, 1294, 0));
-    UIGroup->AddNewObject(UIMoney = new Engine::Label(std::string("$") + std::to_string(money), "pirulen.ttf", 24, 1294, 128*MapHeight));
-    UIGroup->AddNewObject(UILives = new Engine::Label(std::string("Life ") + std::to_string(lives), "pirulen.ttf", 24, 1294, 128*MapHeight+30));
-
+    UIGroup->AddNewObject(UIMoney = new Engine::Label(std::string("$") + std::to_string(money), "pirulen.ttf", 24, 1294, 128 * MapHeight));
+    UIGroup->AddNewObject(UILives = new Engine::Label(std::string("Life ") + std::to_string(lives), "pirulen.ttf", 24, 1294, 128 * MapHeight + 30));
 
     ButtonTurret* btn;
     // Button 1 Turret Fire
     btn = new ButtonTurret("play/floor.png", "play/dirt.png",
-        Engine::Sprite("play/turret-3.png", 180, BlockSize*MapHeight, 0, 0, 0, 0)
-        , 170, 128*MapHeight, TurretFire::Price);
+                           Engine::Sprite("play/turret-3.png", 180, BlockSize * MapHeight, 0, 0, 0, 0), 170, 128 * MapHeight, TurretFire::Price);
     // Reference: Class Member Function Pointer and std::bind.
     btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 2));
     UIGroup->AddNewControlObject(btn);
 
     // Button 2 Turret Platelet
     btn = new ButtonTurret("play/floor.png", "play/dirt.png",
-        Engine::Sprite("play/turret-2.png", 300, BlockSize*MapHeight, 0, 0, 0, 0)
-        , 290, 128*MapHeight, TurretPlatelet::Price);
+                           Engine::Sprite("play/turret-2.png", 300, BlockSize * MapHeight, 0, 0, 0, 0), 290, 128 * MapHeight, TurretPlatelet::Price);
     btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 1));
     UIGroup->AddNewControlObject(btn);
-    // TODO 2 (3/8): Create a button to support constructing the 3th tower.
+    // nTODO 2 (3/8): Create a button to support constructing the 3th tower.
     // Button 3 Turret Freeze
     btn = new ButtonTurret("play/floor.png", "play/dirt.png",
-        Engine::Sprite("play/turret-1.png", 420, BlockSize*MapHeight, 0, 0, 0, 0)
-        , 410, 128*MapHeight, TurretFreeze::Price);
+                           Engine::Sprite("play/turret-1.png", 420, BlockSize * MapHeight, 0, 0, 0, 0), 410, 128 * MapHeight, TurretFreeze::Price);
     btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 0));
     UIGroup->AddNewControlObject(btn);
-
 
     int w = Engine::EngineGame::GetInstance().GetScreenSize().x;
     int h = Engine::EngineGame::GetInstance().GetScreenSize().y;
@@ -410,7 +409,7 @@ void ScenePlay::UIBtnClicked(int id) {
         preview = new TurretPlatelet(0, 0);
     else if (id == 2 && money >= TurretFire::Price)
         preview = new TurretFire(0, 0);
-    // TODO 2 (4/8): On callback, create the 3th tower.
+    // nTODO 2 (4/8): On callback, create the 3th tower.
     if (!preview)
         return;
     preview->Position = Engine::EngineGame::GetInstance().GetMousePosition();
@@ -422,7 +421,7 @@ void ScenePlay::UIBtnClicked(int id) {
 }
 
 bool ScenePlay::CheckSpaceValid(int x, int y) {
-    if (x < 0 || x >= MapWidth  || y < 0 || y >= MapHeight  )
+    if (x < 0 || x >= MapWidth || y < 0 || y >= MapHeight)
         return false;
     for (auto& it : EnemyGroup->GetObjects()) {
         Engine::Point pnt;
@@ -432,7 +431,7 @@ bool ScenePlay::CheckSpaceValid(int x, int y) {
         if (pnt.x >= MapWidth) pnt.x = MapWidth - 1;
         if (pnt.y < 0) pnt.y = 0;
         if (pnt.y >= MapHeight) pnt.y = MapHeight - 1;
-        if (pnt.x == x && pnt.y == y){
+        if (pnt.x == x && pnt.y == y) {
             return false;
         }
     }

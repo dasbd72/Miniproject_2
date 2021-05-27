@@ -3,7 +3,8 @@
 #include "Enemy.hpp"
 
 class EnemySofa : public Enemy {
-public:
+   public:
     EnemySofa(int x, int y);
+    void Update(float deltaTime) override;
 };
-#endif // SOFAENEMY_HPP
+#endif  // SOFAENEMY_HPP

@@ -9,8 +9,8 @@ struct Point;
 }  // namespace Engine
 
 class BulletFire : public Bullet {
-public:
-    explicit BulletFire(Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent);
-    void OnExplode(Enemy* enemy) override;
+   public:
+    explicit BulletFire(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent);
+    void OnExplode(SpriteObject* spriteObj) override;
 };
-#endif // FIREBULLET_HPP
+#endif  // FIREBULLET_HPP

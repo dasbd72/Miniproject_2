@@ -2,17 +2,18 @@
 #define SLIDER_HPP
 #include <functional>
 
-#include "Image.hpp"
 #include "ButtonImage.hpp"
+#include "Image.hpp"
 
 class Slider : public Engine::ButtonImage {
-private:
+   private:
     Image Bar;
     Image End1;
     Image End2;
     std::function<void(float value)> OnValueChangedCallback;
     float value = 0;
-public:
+
+   public:
     const float Min = 0;
     const float Max = 1;
     bool Down = false;
@@ -24,4 +25,4 @@ public:
     void OnMouseUp(int button, int mx, int my) override;
     void OnMouseMove(int mx, int my) override;
 };
-#endif // SLIDER_HPP
+#endif  // SLIDER_HPP

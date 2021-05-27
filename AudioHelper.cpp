@@ -1,12 +1,13 @@
+#include "AudioHelper.hpp"
+
 #include <allegro5/allegro_audio.h>
 
 #include "Allegro5Exception.hpp"
-#include "AudioHelper.hpp"
 #include "LOG.hpp"
 #include "Resources.hpp"
 
-float AudioHelper::BGMVolume = 1.0;
-float AudioHelper::SFXVolume = 1.0;
+float AudioHelper::BGMVolume = 0.5;
+float AudioHelper::SFXVolume = 0.5;
 ALLEGRO_SAMPLE_ID AudioHelper::PlayAudio(const std::string& audio) {
     ALLEGRO_SAMPLE* sample = Engine::Resources::GetInstance().GetSample(audio).get();
     ALLEGRO_SAMPLE_ID id;

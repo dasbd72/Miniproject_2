@@ -1,13 +1,15 @@
 #ifndef WINSCENE_HPP
 #define WINSCENE_HPP
 #include <allegro5/allegro_audio.h>
+
 #include "IScene.hpp"
 
 class SceneWin final : public Engine::IScene {
-private:
+   private:
     float ticks;
     ALLEGRO_SAMPLE_ID bgmId;
-public:
+
+   public:
     explicit SceneWin() = default;
     void Initialize() override;
     void Terminate() override;
@@ -15,4 +17,4 @@ public:
     void BackOnClick(int stage);
 };
 
-#endif // WINSCENE_HPP
+#endif  // WINSCENE_HPP

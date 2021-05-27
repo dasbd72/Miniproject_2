@@ -8,9 +8,10 @@
 class ScenePlay;
 
 class ButtonTurret : public Engine::ButtonImage {
-protected:
+   protected:
     ScenePlay* getPlayScene();
-public:
+
+   public:
     int money;
     // Engine::Sprite Base;
     Engine::Sprite Turret;
@@ -19,4 +20,4 @@ public:
     void Update(float deltaTime) override;
     void Draw() const override;
 };
-#endif // TURRETBUTTON_HPP
+#endif  // TURRETBUTTON_HPP

@@ -1,17 +1,19 @@
+#include "SceneStageSelect.hpp"
+
 #include <allegro5/allegro_audio.h>
+
 #include <functional>
 #include <memory>
 #include <string>
 
 #include "AudioHelper.hpp"
-#include "EngineGame.hpp"
 #include "ButtonImage.hpp"
+#include "EngineGame.hpp"
 #include "Label.hpp"
-#include "ScenePlay.hpp"
 #include "Point.hpp"
 #include "Resources.hpp"
+#include "ScenePlay.hpp"
 #include "Slider.hpp"
-#include "SceneStageSelect.hpp"
 
 void SceneStageSelect::Initialize() {
     int w = Engine::EngineGame::GetInstance().GetScreenSize().x;

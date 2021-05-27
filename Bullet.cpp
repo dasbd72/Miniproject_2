@@ -1,21 +1,21 @@
 #include "Bullet.hpp"
+
 #include "Collider.hpp"
 #include "Enemy.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IObject.hpp"
 #include "IScene.hpp"
-#include "ScenePlay.hpp"
 #include "Point.hpp"
+#include "ScenePlay.hpp"
 #include "SpriteObject.hpp"
 
 ScenePlay* Bullet::getPlayScene() {
     return dynamic_cast<ScenePlay*>(Engine::EngineGame::GetInstance().GetActiveScene());
 }
-void Bullet::OnExplode(Enemy* enemy) {
+void Bullet::OnExplode(SpriteObject* spriteObj) {
 }
-Bullet::Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret* parent) :
-    SpriteObject(img, position.x, position.y), speed(speed), damage(damage), parent(parent) {
+Bullet::Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent) : SpriteObject(img, position.x, position.y), speed(speed), damage(damage), parent(parent) {
     Velocity = forwardDirection * speed;
     Rotation = rotation;
     CollisionRadius = 4;
@@ -31,7 +31,7 @@ void Bullet::Update(float deltaTime) {
             continue;
         if (Engine::Collider::IsCircleOverlap(Position, CollisionRadius, enemy->Position, enemy->CollisionRadius)) {
             OnExplode(enemy);
-            enemy->Hit(this);
+            enemy->HitBy(this);
             getPlayScene()->BulletGroup->RemoveObject(objectIterator);
             return;
         }

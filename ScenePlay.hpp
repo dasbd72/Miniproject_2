@@ -1,25 +1,26 @@
 #ifndef PLAYSCENE_HPP
 #define PLAYSCENE_HPP
 #include <allegro5/allegro_audio.h>
+
 #include <list>
 #include <memory>
+#include <tuple>
 #include <utility>
 #include <vector>
-#include <tuple>
 
 #include "IScene.hpp"
 #include "Point.hpp"
 
 class Turret;
 namespace Engine {
-    class Group;
-    class Image;
-    class Label;
-    class Sprite;
+class Group;
+class Image;
+class Label;
+class Sprite;
 }  // namespace Engine
 
 class ScenePlay final : public Engine::IScene {
-private:
+   private:
     enum TileType {
         TILE_DIRT,
         TILE_FLOOR,
@@ -27,11 +28,13 @@ private:
     };
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
-protected:
+
+   protected:
     int lives;
     int money;
     int SpeedMult;
-public:
+
+   public:
     static bool DebugMode;
     static const std::vector<Engine::Point> directions;
     static const int MapWidth, MapHeight;
@@ -59,7 +62,7 @@ public:
     Turret* preview;
     std::vector<std::vector<TileType>> mapState;
     std::vector<int> laneNum;
-    std::list<std::tuple<int, float,int>> enemyWaveData;
+    std::list<std::tuple<int, float, int>> enemyWaveData;
     std::list<int> keyStrokes;
     static Engine::Point GetClientSize();
     explicit ScenePlay() = default;
@@ -71,7 +74,7 @@ public:
     void OnMouseMove(int mx, int my) override;
     void OnMouseUp(int button, int mx, int my) override;
     void OnKeyDown(int keyCode) override;
-    void Hit();
+    void HitBy();
     int GetMoney() const;
     void EarnMoney(int money);
     void ReadMap();
@@ -82,4 +85,4 @@ public:
     std::vector<std::vector<int>> CalculateBFSDistance();
     // void ModifyReadMapTiles();
 };
-#endif // PLAYSCENE_HPP
+#endif  // PLAYSCENE_HPP

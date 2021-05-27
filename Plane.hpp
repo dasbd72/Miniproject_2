@@ -1,6 +1,7 @@
 #ifndef PLANE_HPP
 #define PLANE_HPP
 #include <allegro5/bitmap.h>
+
 #include <memory>
 #include <vector>
 
@@ -9,7 +10,7 @@
 class ScenePlay;
 
 class Plane : public SpriteObject {
-protected:
+   protected:
     ScenePlay* getPlayScene();
     const float timeSpanLight = 1;
     const float timeSpanShockwave = 1;
@@ -21,9 +22,10 @@ protected:
     float scale;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> bmps;
     std::shared_ptr<ALLEGRO_BITMAP> shockwave;
-public:
+
+   public:
     Plane();
     void Update(float deltaTime) override;
     void Draw() const override;
 };
-#endif // PLANE_HPP
+#endif  // PLANE_HPP
