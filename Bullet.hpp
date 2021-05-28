@@ -19,13 +19,14 @@ class Bullet : public SpriteObject {
    protected:
     float speed;
     float damage;
-    SpriteObject* parent;
+    std::string parentType;
+    SpriteObject* parentObj;
     ScenePlay* getPlayScene();
     virtual void OnExplode(SpriteObject* spriteObj);
 
    public:
     Enemy* Target = nullptr;
-    explicit Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent);
+    explicit Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parentObj);
     /**
      * @brief Update overridden
      * 

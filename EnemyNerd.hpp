@@ -6,5 +6,6 @@ class EnemyNerd : public Enemy {
    public:
     EnemyNerd(int x, int y);
     void Update(float deltaTime) override;
+    void CreateBullet() override;
 };
 #endif  // ENEMYNERD_HPP

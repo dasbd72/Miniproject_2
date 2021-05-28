@@ -6,5 +6,6 @@ class EnemySofa : public Enemy {
    public:
     EnemySofa(int x, int y);
     void Update(float deltaTime) override;
+    void CreateBullet() override;
 };
 #endif  // SOFAENEMY_HPP

@@ -10,7 +10,7 @@ struct Point;
 
 class BulletPocky : public Bullet {
    public:
-    explicit BulletPocky(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent);
+    explicit BulletPocky(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parentObj);
     void OnExplode(SpriteObject* spriteObj) override;
 };
 #endif  // POCKYBULLET_HPP

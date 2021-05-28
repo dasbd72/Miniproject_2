@@ -33,6 +33,3 @@ void SpriteObject::updateEffect(float deltaTime) {
         if (it->second <= 0) effectActived.erase(it->first);
     }
 }
-int SpriteObject::getLane() {
-    return floorf(Engine::EngineGame::GetInstance().GetScreenHeight() / Position.y);
-}

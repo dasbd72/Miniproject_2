@@ -40,15 +40,15 @@ Turret *Enemy::getTurretTarget() {
     Turret *turretTarget = nullptr;
     for (auto &it : getPlayScene()->TowerGroup->GetObjects()) {
         Turret *turret = dynamic_cast<Turret *>(it);
-        if (!turret->Visible || turret->getLane() != this->getLane())
+        if (!turret->Visible || getPlayScene()->getLane(turret->Position.y) != getPlayScene()->getLane(Position.y) || turret->Position.x >= this->Position.x)
             continue;
-        if (!turretTarget && ((turret->Position - this->Position).Magnitude() <= atkRadius) && (!turretTarget || (turretTarget->Position - this->Position).MagnitudeSquared() > (turret->Position - this->Position).MagnitudeSquared())) {
+        if (((turret->Position - this->Position).Magnitude() <= atkRadius) && (!turretTarget || (turretTarget->Position - this->Position).MagnitudeSquared() > (turret->Position - this->Position).MagnitudeSquared())) {
             turretTarget = turret;
         }
     }
     return turretTarget;
 }
-Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money, float damage, float atkRadius) : SpriteObject(img, x, y), speed(speed), hp(hp), money(money), damage(damage), atkRadius(atkRadius) {
+Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money, float damage, float atkRadius, float coolDown = 5) : SpriteObject(img, x, y), speed(speed), hp(hp), money(money), damage(damage), atkRadius(atkRadius), coolDown(coolDown) {
     CollisionRadius = radius;
     reachEndTime = 0;
     Velocity = Engine::Point(speed, 0);
@@ -84,8 +84,14 @@ void Enemy::Update(float deltaTime) {
     SpriteObject::updateEffect(deltaTime);
     float remainSpeed = speed * (hasEffect(FROZEN) ? 0.25 : 1);
     Turret *targetTurret = getTurretTarget();
+    if (reload > 0) reload -= deltaTime;
     if (targetTurret != nullptr) {
         remainSpeed = 0;
+        if (reload <= 0) {
+            // shoot.
+            reload = coolDown;
+            CreateBullet();
+        }
     }
     Velocity = Engine::Point(remainSpeed, 0);
     Position.x -= Velocity.x * deltaTime;

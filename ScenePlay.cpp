@@ -52,7 +52,7 @@ void ScenePlay::Initialize() {
     keyStrokes.clear();
     ticks = 0;
     deathCountDown = -1;
-    lives = 10000;
+    lives = 10;
     money = 150;
     SpeedMult = 1;
     laneNum = std::vector<int>(MapHeight);
@@ -436,4 +436,10 @@ bool ScenePlay::CheckSpaceValid(int x, int y) {
         }
     }
     return true;
+}
+void ScenePlay::FreeSpace(int x, int y) {
+    mapState[y / BlockSize][x / BlockSize] = TILE_FLOOR;
+}
+int ScenePlay::getLane(int y) {
+    return y / BlockSize;
 }

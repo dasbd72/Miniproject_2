@@ -10,7 +10,7 @@ struct Point;
 
 class BulletFire : public Bullet {
    public:
-    explicit BulletFire(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent);
+    explicit BulletFire(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parentObj);
     void OnExplode(SpriteObject* spriteObj) override;
 };
 #endif  // FIREBULLET_HPP

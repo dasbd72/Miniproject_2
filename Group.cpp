@@ -39,6 +39,12 @@ void Group::Update(float deltaTime) {
             preIt->second->Update(deltaTime);
     }
 }
+void Group::RemoveInvisible() {
+    for (auto it = objects.begin(); it != objects.end(); it++) {
+        if (!it->second->Visible)
+            RemoveObject(it);
+    }
+}
 void Group::Draw() const {
     for (auto& it : objects) {
         if (it.second->Visible)

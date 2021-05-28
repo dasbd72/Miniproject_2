@@ -82,6 +82,8 @@ class ScenePlay final : public Engine::IScene {
     void ConstructUI();
     void UIBtnClicked(int id);
     bool CheckSpaceValid(int x, int y);
+    void FreeSpace(int x, int y);
+    int getLane(int y);
     std::vector<std::vector<int>> CalculateBFSDistance();
     // void ModifyReadMapTiles();
 };

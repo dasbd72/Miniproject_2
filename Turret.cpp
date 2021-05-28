@@ -31,15 +31,18 @@ Turret::Turret(std::string imgTurret, float x, float y, float radius, float hp, 
 void Turret::HitBy(Engine::IObject* obj) {
     Bullet* bulletObj = dynamic_cast<Bullet*>(obj);
     Enemy* enemyObj = dynamic_cast<Enemy*>(obj);
+    auto Scene = getPlayScene();
     if (enemyObj != nullptr) {
         this->hp -= enemyObj->damage;
     } else if (bulletObj != nullptr) {
-        if (dynamic_cast<Enemy*>(bulletObj->parent))
+        if (bulletObj->parentType == "Enemy")
             this->hp -= bulletObj->damage;
     }
     if (this->hp <= 0) {
-        getPlayScene()->TowerGroup->RemoveObject(objectIterator);
+        OnExplode();
+        Scene->TowerGroup->RemoveObject(objectIterator);
         AudioHelper::PlayAudio("explosion.wav");
+        Scene->FreeSpace(Position.x, Position.y);
     }
 }
 void Turret::Update(float deltaTime) {
@@ -47,6 +50,7 @@ void Turret::Update(float deltaTime) {
     ScenePlay* scene = getPlayScene();
     if (!Enabled)
         return;
+    if (reload > 0) reload -= deltaTime;
     if (Target) {
         if (Target->Position.x < Position.x && Target->Position.y >= Position.y && Target->Position.y < Position.y + scene->BlockSize) {
             Target->lockedTurrets.erase(lockedTurretIterator);
@@ -54,7 +58,6 @@ void Turret::Update(float deltaTime) {
             lockedTurretIterator = std::list<Turret*>::iterator();
         }
         // Shoot reload.
-        reload -= deltaTime;
         if (reload <= 0) {
             // shoot.
             reload = coolDown;

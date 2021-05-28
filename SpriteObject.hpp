@@ -51,7 +51,6 @@ class SpriteObject : public Engine::Sprite {
      * 
      */
     void updateEffect(float deltaTime);
-    int getLane();
 
     virtual void HitBy(Engine::IObject* obj) {}
 

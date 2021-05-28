@@ -10,7 +10,7 @@ struct Point;
 
 class BulletIceCream : public Bullet {
    public:
-    explicit BulletIceCream(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent);
+    explicit BulletIceCream(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parentObj);
     void OnExplode(SpriteObject* spriteObj) override;
 };
 #endif  // ICECREAMBULLET_HPP

@@ -50,6 +50,11 @@ class Group : public IObject, public IControl {
     /// Delegate the update event to all visible objects.
     /// @param deltaTime Time elapsed since last update, can be used to calculate value changes.
     void Update(float deltaTime) override;
+    /**
+     * @brief Remove 
+     * 
+     */
+    void RemoveInvisible();
     /// @brief Draw to window display.
     /// This is called when the game should redraw the window.
     /// Delegate the draw event to all visible objects.

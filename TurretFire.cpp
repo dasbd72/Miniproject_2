@@ -12,8 +12,8 @@
 #include "Point.hpp"
 #include "ScenePlay.hpp"
 #include "Turret.hpp"
-const int TurretFire::Price = 30;
-TurretFire::TurretFire(float x, float y) : Turret("play/turret-3.png", x, y, 30, 100, Price, 1) {
+const int TurretFire::Price = 10;
+TurretFire::TurretFire(float x, float y) : Turret("play/turret-3.png", x, y, 30, 100, Price, 0.7) {
     // Move center downward, since we the turret head is slightly biased upward.
     Anchor.y += 8.0f / GetBitmapHeight();
 }

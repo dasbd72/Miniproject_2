@@ -14,7 +14,7 @@
 
 class Turret;
 
-BulletPocky::BulletPocky(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parent) : Bullet("play/bullet-2.png", 800, 1, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
+BulletPocky::BulletPocky(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parentObj) : Bullet("play/bullet-2.png", 800, 1, position, forwardDirection, rotation - ALLEGRO_PI / 2, parentObj) {
 }
 void BulletPocky::OnExplode(SpriteObject* spriteObj) {
     std::random_device dev;

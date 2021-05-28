@@ -21,6 +21,8 @@ class Enemy : public SpriteObject {
     float hp;
     float damage;
     float atkRadius;
+    float coolDown;
+    float reload = 0;
     int money;
     ScenePlay* getPlayScene();
     virtual void OnExplode();
@@ -44,7 +46,7 @@ class Enemy : public SpriteObject {
      * @param damage 
      * @param atkRadius 
      */
-    Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money, float damage, float atkRadius);
+    Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money, float damage, float atkRadius, float coolDown);
     /**
      * @brief Enemy HitBy obj
      * 
