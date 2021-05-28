@@ -18,6 +18,7 @@ class Turret : public SpriteObject {
     friend class Bullet;
 
    protected:
+    std::string Name;
     int price;
     float hp;
     float coolDown;
@@ -58,5 +59,6 @@ class Turret : public SpriteObject {
      */
     void Draw() const override;
     int GetPrice() const;
+    std::string GetName() const;
 };
 #endif  // TURRET_HPP

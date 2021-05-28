@@ -1,4 +1,4 @@
-#include "TurretTank.hpp"
+#include "TurretRemove.hpp"
 
 #include <allegro5/base.h>
 
@@ -12,6 +12,7 @@
 #include "Point.hpp"
 #include "ScenePlay.hpp"
 #include "Turret.hpp"
-const int TurretTank::Price = 10;
-TurretTank::TurretTank(float x, float y) : Turret("play/turret-4.png", x, y, 30, 250, Price, 0.7) {
+const int TurretRemove::Price = 0;
+TurretRemove::TurretRemove(float x, float y) : Turret("play/bomb.png", x, y, 30, 0, Price, 0) {
+    Name = "Remove";
 }

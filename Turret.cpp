@@ -31,12 +31,15 @@ Turret::Turret(std::string imgTurret, float x, float y, float radius, float hp, 
 void Turret::HitBy(Engine::IObject* obj) {
     Bullet* bulletObj = dynamic_cast<Bullet*>(obj);
     Enemy* enemyObj = dynamic_cast<Enemy*>(obj);
+    ScenePlay* sceneObj = dynamic_cast<ScenePlay*>(obj);
     auto Scene = getPlayScene();
     if (enemyObj != nullptr) {
         this->hp -= enemyObj->damage;
     } else if (bulletObj != nullptr) {
         if (bulletObj->parentType == "Enemy")
             this->hp -= bulletObj->damage;
+    } else if (sceneObj != nullptr) {
+        this->hp = 0;
     }
     if (this->hp <= 0) {
         OnExplode();
@@ -100,4 +103,7 @@ void Turret::Draw() const {
 }
 int Turret::GetPrice() const {
     return price;
+}
+std::string Turret::GetName() const {
+    return Name;
 }
