@@ -1,5 +1,5 @@
-#ifndef PLATELETTURRET_HPP
-#define PLATELETTURRET_HPP
+#ifndef TURRETPLATELET_HPP
+#define TURRETPLATELET_HPP
 #include "Turret.hpp"
 
 class TurretPlatelet : public Turret {
@@ -9,4 +9,4 @@ class TurretPlatelet : public Turret {
     void CreateBullet() override;
     void Update(float deltaTime) override;
 };
-#endif  // PLATELETTURRET_HPP
+#endif  // TURRETPLATELET_HPP

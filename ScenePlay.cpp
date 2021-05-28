@@ -31,9 +31,11 @@
 #include "Resources.hpp"
 #include "Sprite.hpp"
 #include "Turret.hpp"
+#include "TurretExplode.hpp"
 #include "TurretFire.hpp"
 #include "TurretFreeze.hpp"
 #include "TurretPlatelet.hpp"
+#include "TurretTank.hpp"
 
 bool ScenePlay::DebugMode = false;
 const std::vector<Engine::Point> ScenePlay::directions = {Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1)};
@@ -282,13 +284,19 @@ void ScenePlay::OnKeyDown(int keyCode) {
     }
     if (keyCode == ALLEGRO_KEY_Q) {
         // Hotkey for TurretFire.
-        UIBtnClicked(2);
+        UIBtnClicked(0);
     } else if (keyCode == ALLEGRO_KEY_W) {
         // Hotkey for TurretPlatelet.
         UIBtnClicked(1);
     } else if (keyCode == ALLEGRO_KEY_E) {
         // Hotkey for TurretFreeze.
-        UIBtnClicked(0);
+        UIBtnClicked(2);
+    } else if (keyCode == ALLEGRO_KEY_R) {
+        // Hotkey for TurretTank.
+        UIBtnClicked(3);
+    } else if (keyCode == ALLEGRO_KEY_T) {
+        // Hotkey for TurretExplode.
+        UIBtnClicked(4);
     }
     // nTODO 2 (5/8): Make the E key to create the 3th turret.
     else if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9) {
@@ -375,7 +383,7 @@ void ScenePlay::ConstructUI() {
     btn = new ButtonTurret("play/floor.png", "play/dirt.png",
                            Engine::Sprite("play/turret-3.png", 180, BlockSize * MapHeight, 0, 0, 0, 0), 170, 128 * MapHeight, TurretFire::Price);
     // Reference: Class Member Function Pointer and std::bind.
-    btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 2));
+    btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 0));
     UIGroup->AddNewControlObject(btn);
 
     // Button 2 Turret Platelet
@@ -387,7 +395,19 @@ void ScenePlay::ConstructUI() {
     // Button 3 Turret Freeze
     btn = new ButtonTurret("play/floor.png", "play/dirt.png",
                            Engine::Sprite("play/turret-1.png", 420, BlockSize * MapHeight, 0, 0, 0, 0), 410, 128 * MapHeight, TurretFreeze::Price);
-    btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 0));
+    btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 2));
+    UIGroup->AddNewControlObject(btn);
+
+    // Button 4 Turret Tank
+    btn = new ButtonTurret("play/floor.png", "play/dirt.png",
+                           Engine::Sprite("play/turret-4.png", 530, BlockSize * MapHeight, 0, 0, 0, 0), 530, 128 * MapHeight, TurretTank::Price);
+    btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 4));
+    UIGroup->AddNewControlObject(btn);
+
+    // Button 5 Turret Explode
+    btn = new ButtonTurret("play/floor.png", "play/dirt.png",
+                           Engine::Sprite("play/turret-5.png", 650, BlockSize * MapHeight, 0, 0, 0, 0), 650, 128 * MapHeight, TurretTank::Price);
+    btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 5));
     UIGroup->AddNewControlObject(btn);
 
     int w = Engine::EngineGame::GetInstance().GetScreenSize().x;
@@ -403,12 +423,16 @@ void ScenePlay::UIBtnClicked(int id) {
         UIGroup->RemoveObject(preview->GetObjectIterator());
         preview = nullptr;
     }
-    if (id == 0 && money >= TurretFreeze::Price)
-        preview = new TurretFreeze(0, 0);
+    if (id == 0 && money >= TurretFire::Price)
+        preview = new TurretFire(0, 0);
     else if (id == 1 && money >= TurretPlatelet::Price)
         preview = new TurretPlatelet(0, 0);
-    else if (id == 2 && money >= TurretFire::Price)
-        preview = new TurretFire(0, 0);
+    else if (id == 2 && money >= TurretFreeze::Price)
+        preview = new TurretFreeze(0, 0);
+    else if (id == 3 && money >= TurretTank::Price)
+        preview = new TurretTank(0, 0);
+    else if (id == 4 && money >= TurretExplode::Price)
+        preview = new TurretExplode(0, 0);
     // nTODO 2 (4/8): On callback, create the 3th tower.
     if (!preview)
         return;

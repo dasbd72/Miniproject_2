@@ -1,5 +1,5 @@
-#ifndef WBCELLTURRET_HPP
-#define WBCELLTURRET_HPP
+#ifndef TURRETFIRE_HPP
+#define TURRETFIRE_HPP
 #include "Turret.hpp"
 
 class TurretFire : public Turret {
@@ -8,4 +8,4 @@ class TurretFire : public Turret {
     TurretFire(float x, float y);
     void CreateBullet() override;
 };
-#endif  // WBCELLTURRET_HPP
+#endif  // TURRETFIRE_HPP
