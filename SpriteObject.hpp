@@ -51,6 +51,7 @@ class SpriteObject : public Engine::Sprite {
      * 
      */
     void updateEffect(float deltaTime);
+    int getLane();
 
     virtual void HitBy(Engine::IObject* obj) {}
 
@@ -58,7 +59,6 @@ class SpriteObject : public Engine::Sprite {
     /// Set Object Of Effects
     std::set<EFFECT> effectActived;
     std::map<EFFECT, float> effectTimeleft;
-    
 };
 
 #endif

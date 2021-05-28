@@ -24,6 +24,8 @@ class Enemy : public SpriteObject {
     int money;
     ScenePlay* getPlayScene();
     virtual void OnExplode();
+    virtual void CreateBullet();
+    virtual Turret* getTurretTarget();
 
    public:
     float reachEndTime;

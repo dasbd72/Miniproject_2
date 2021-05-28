@@ -1,19 +1,25 @@
-#include <set>
-#include <string>
-#include <allegro5/allegro.h>
-#include <memory>
-
-#include "Image.hpp"
-#include "Point.hpp"
 #include "SpriteObject.hpp"
 
+#include <allegro5/allegro.h>
 
-SpriteObject::SpriteObject(std::string img, float x, float y):Engine::Sprite(img, x, y){}
+#include <cmath>
+#include <memory>
+#include <set>
+#include <string>
+
+#include "EngineGame.hpp"
+#include "Image.hpp"
+#include "LOG.hpp"
+#include "Point.hpp"
+
+SpriteObject::SpriteObject(std::string img, float x, float y) : Engine::Sprite(img, x, y) {}
 bool SpriteObject::hasEffect(EFFECT effect) {
-    if(effectActived.find(effect) != effectActived.end()) return 1;
-    else return 0;
+    if (effectActived.find(effect) != effectActived.end())
+        return 1;
+    else
+        return 0;
 }
-float SpriteObject::getEffectTime(EFFECT effect){
+float SpriteObject::getEffectTime(EFFECT effect) {
     return effectTimeleft[effect];
 }
 void SpriteObject::addEffect(EFFECT effect, float time) {
@@ -21,9 +27,12 @@ void SpriteObject::addEffect(EFFECT effect, float time) {
     effectTimeleft[effect] = time;
     return;
 }
-void SpriteObject::updateEffect(float deltaTime){
-    for(auto it = effectTimeleft.begin(); it != effectTimeleft.end(); it++){
+void SpriteObject::updateEffect(float deltaTime) {
+    for (auto it = effectTimeleft.begin(); it != effectTimeleft.end(); it++) {
         it->second -= deltaTime;
-        if(it->second <= 0) effectActived.erase(it->first);
+        if (it->second <= 0) effectActived.erase(it->first);
     }
+}
+int SpriteObject::getLane() {
+    return floorf(Engine::EngineGame::GetInstance().GetScreenHeight() / Position.y);
 }

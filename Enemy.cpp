@@ -34,6 +34,20 @@ void Enemy::OnExplode() {
         getPlayScene()->GroundEffectGroup->AddNewObject(new EffectDirty("play/dirty-" + std::to_string(distId(rng)) + ".png", dist(rng), Position.x, Position.y));
     }
 }
+void Enemy::CreateBullet() {
+}
+Turret *Enemy::getTurretTarget() {
+    Turret *turretTarget = nullptr;
+    for (auto &it : getPlayScene()->TowerGroup->GetObjects()) {
+        Turret *turret = dynamic_cast<Turret *>(it);
+        if (!turret->Visible || turret->getLane() != this->getLane())
+            continue;
+        if (!turretTarget && ((turret->Position - this->Position).Magnitude() <= atkRadius) && (!turretTarget || (turretTarget->Position - this->Position).MagnitudeSquared() > (turret->Position - this->Position).MagnitudeSquared())) {
+            turretTarget = turret;
+        }
+    }
+    return turretTarget;
+}
 Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money, float damage, float atkRadius) : SpriteObject(img, x, y), speed(speed), hp(hp), money(money), damage(damage), atkRadius(atkRadius) {
     CollisionRadius = radius;
     reachEndTime = 0;
@@ -41,17 +55,18 @@ Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float
     target = Engine::Point(ScenePlay::EndGridPointx, static_cast<int>(floor(Position.y / ScenePlay::BlockSize))) * ScenePlay::BlockSize + Engine::Point(ScenePlay::BlockSize / 2, ScenePlay::BlockSize / 2);
 }
 void Enemy::HitBy(Engine::IObject *obj) {
-
     Bullet *bulletObj = dynamic_cast<Bullet *>(obj);
     Turret *turretObj = dynamic_cast<Turret *>(obj);
     Plane *planeObj = dynamic_cast<Plane *>(obj);
     Engine::IScene *sceneObj = dynamic_cast<Engine::IScene *>(obj);
 
-    if (sceneObj != nullptr || planeObj != nullptr || turretObj != nullptr) {
-        hp -= hp;
-    } else if (bulletObj != nullptr) {
+    if (bulletObj != nullptr) {
         hp -= bulletObj->damage;
         if (bulletObj->hasEffect(FROZEN)) addEffect(FROZEN, 2);
+    } else if (sceneObj != nullptr || planeObj != nullptr || turretObj != nullptr) {
+        hp = 0;
+    } else {
+        hp = 0;
     }
     if (hp <= 0) {
         OnExplode();
@@ -67,22 +82,12 @@ void Enemy::HitBy(Engine::IObject *obj) {
 }
 void Enemy::Update(float deltaTime) {
     SpriteObject::updateEffect(deltaTime);
-    float remainSpeed = speed * deltaTime;
-    ScenePlay *scene = getPlayScene();
-
-    // Enemy hit turret
-    for (auto &it : scene->TowerGroup->GetObjects()) {
-        Turret *turret = dynamic_cast<Turret *>(it);
-        if (!turret->Visible)
-            continue;
-        if (Engine::Collider::IsCircleOverlap(Position, CollisionRadius, turret->Position, turret->CollisionRadius)) {
-            turret->HitBy(this);
-            this->HitBy(turret);
-            return;
-        }
+    float remainSpeed = speed * (hasEffect(FROZEN) ? 0.25 : 1);
+    Turret *targetTurret = getTurretTarget();
+    if (targetTurret != nullptr) {
+        remainSpeed = 0;
     }
-
-    Velocity = Engine::Point(speed * (hasEffect(FROZEN) ? 0.25 : 1), 0);
+    Velocity = Engine::Point(remainSpeed, 0);
     Position.x -= Velocity.x * deltaTime;
     Position.y += Velocity.y * deltaTime;
     if (Position.x <= ScenePlay::EndGridPointx * ScenePlay::BlockSize + ScenePlay::BlockSize / 2) {
@@ -91,8 +96,7 @@ void Enemy::Update(float deltaTime) {
         reachEndTime = 0;
         return;
     }
-    Engine::Point vec = target - Position;
-    reachEndTime = (vec.Magnitude() - remainSpeed) / speed;
+    reachEndTime = remainSpeed == 0 ? INFINITY : ((target - Position).Magnitude() - remainSpeed * deltaTime) / remainSpeed;
 }
 void Enemy::Draw() const {
     Sprite::Draw();
