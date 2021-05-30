@@ -73,6 +73,7 @@ endif
 ifeq ($(detected_OS),Darwin)
 # brew install make
 # brew install allegro
+# brew install pkg-config
 CXX = g++
 ODIR = obj
 EXE = TowerDefense
@@ -92,4 +93,7 @@ $(OBJ): $(ODIR)/%.o: %.cpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
 clean:
 	rm -rf $(OBJ) $(EXE)
+run:
+	make all
+	./$(EXE)
 endif
