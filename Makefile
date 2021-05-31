@@ -1,4 +1,3 @@
-# Makefile for Windows
 # Ref:https://www.gnu.org/software/make/manual/html_node/index.html#Top
 ifeq ($(OS),Windows_NT)
 	detected_OS := Windows
@@ -18,9 +17,8 @@ LDIR = $(CURDIR)\allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\
 
 CXXFLAGS = -std=c++17 -I$(IDIR)
 LDFLAGS = -lm -Wall -Wextra -L$(LDIR) -lallegro -lallegro_main -lallegro_font -lallegro_color -lallegro_image -lallegro_acodec -lallegro_audio -lallegro_dialog -lallegro_memfile -lallegro_physfs -lallegro_primitives -lallegro_ttf
-# -lallegro_monolith
 
-.PHONY: all dbg clean run run-dbg makeObjDir
+.PHONY: all dbg clean run run-dbg 
 
 all: $(OBJ)
 	$(CXX) -o $(EXE).exe $(OBJ) -O2 $(CXXFLAGS) $(LDFLAGS)
@@ -67,6 +65,7 @@ $(OBJ): $(ODIR)/%.o: %.cpp
 clean:
 	rm $(EXE) $(OBJ)
 run:
+	make all
 	./$(EXE)
 endif
 ########## MacOS ##########
@@ -84,7 +83,7 @@ CXXFLAGS = -std=c++11 -O2 `pkg-config allegro-5 --cflags`
 LDFLAGS = -lm -Wall -Wextra
 LDLIBS = `pkg-config allegro-5 allegro_acodec-5 allegro_audio-5 allegro_color-5 allegro_dialog-5 allegro_font-5 allegro_image-5 allegro_main-5 allegro_memfile-5 allegro_physfs-5 allegro_primitives-5 allegro_ttf-5 allegro_video-5 --libs`
 
-.PHONY: all clean
+.PHONY: all clean run
 all: $(OBJ)
 	$(CXX) -o $(EXE) $(OBJ) $(LDFLAGS) $(LDLIBS)
 %.o: %.cpp
