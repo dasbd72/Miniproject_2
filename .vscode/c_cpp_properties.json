@@ -9,7 +9,9 @@
         "C:/msys64/mingw64/include/c++",
         "${workspaceRoot}/allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0/include"
       ],
-      "compilerPath": "C:/msys64/mingw64/bin/g++.exe"
+      "compilerPath": "C:/msys64/mingw64/bin/g++.exe",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+      "configurationProvider": "ms-vscode.cmake-tools"
     }
   ],
   "version": 4
