@@ -105,5 +105,5 @@ int Turret::GetPrice() const {
     return price;
 }
 std::string Turret::GetName() const {
-    return Name;
+    return name;
 }

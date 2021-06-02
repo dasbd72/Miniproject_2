@@ -34,6 +34,11 @@ class ScenePlay final : public Engine::IScene {
     int money;
     int SpeedMult;
 
+    // Stage 2
+    int GameStage;
+    float BossWaitTime;
+    bool BossSpawned;
+
    public:
     static bool DebugMode;
     static const std::vector<Engine::Point> directions;
@@ -75,6 +80,7 @@ class ScenePlay final : public Engine::IScene {
     void OnMouseUp(int button, int mx, int my) override;
     void OnKeyDown(int keyCode) override;
     void HitBy();
+    void HitBy(bool oneKill);
     int GetMoney() const;
     void EarnMoney(int money);
     void ReadMap();
@@ -85,6 +91,7 @@ class ScenePlay final : public Engine::IScene {
     void FreeSpace(int x, int y);
     int getLane(int y);
     std::vector<std::vector<int>> CalculateBFSDistance();
+    int getCurrStage();
     // void ModifyReadMapTiles();
 };
 #endif  // PLAYSCENE_HPP

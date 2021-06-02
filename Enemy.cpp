@@ -63,10 +63,13 @@ void Enemy::HitBy(Engine::IObject *obj) {
     if (bulletObj != nullptr) {
         hp -= bulletObj->damage;
         if (bulletObj->hasEffect(FROZEN)) addEffect(FROZEN, 2);
-    } else if (sceneObj != nullptr || planeObj != nullptr || turretObj != nullptr) {
-        hp = 0;
+    } else if (sceneObj != nullptr || planeObj != nullptr || (turretObj != nullptr && turretObj->name == "TurretExplode")) {
+        if (name != "EnemySuper")
+            hp = 0;
+        else
+            hp -= 50;
     } else {
-        hp = 0;
+        hp -= 200;
     }
     if (hp <= 0) {
         OnExplode();

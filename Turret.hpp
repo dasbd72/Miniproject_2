@@ -18,7 +18,6 @@ class Turret : public SpriteObject {
     friend class Bullet;
 
    protected:
-    std::string Name;
     int price;
     float hp;
     float coolDown;

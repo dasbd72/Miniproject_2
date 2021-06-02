@@ -21,6 +21,7 @@
 #include "EnemyNormal.hpp"
 #include "EnemySofa.hpp"
 #include "EnemyStrong.hpp"
+#include "EnemySuper.hpp"
 #include "EngineGame.hpp"
 #include "Group.hpp"
 #include "IObject.hpp"
@@ -51,6 +52,7 @@ Engine::Point ScenePlay::GetClientSize() {
     return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
 void ScenePlay::Initialize() {
+    GameStage = 1;
     mapState.clear();
     keyStrokes.clear();
     ticks = 0;
@@ -147,46 +149,66 @@ void ScenePlay::Update(float deltaTime) {
         IScene::Update(deltaTime);
         // Check if we should create new enemy.
         ticks += deltaTime;
-        if (enemyWaveData.empty()) {
-            if (EnemyGroup->GetObjects().empty()) {
-                // Win.
-                Engine::EngineGame::GetInstance().ChangeScene("win");
+        if (GameStage == 1) {
+            // GameStage 1
+            if (enemyWaveData.empty()) {
+                if (EnemyGroup->GetObjects().empty()) {
+                    // Win.
+                    // Engine::EngineGame::GetInstance().ChangeScene("win");
+
+                    // INIT Stage 2;
+                    GameStage = 2;
+                    BossWaitTime = 0;
+                    BossSpawned = false;
+                }
+                continue;
             }
-            continue;
-        }
-        auto current = enemyWaveData.front();
-        if (ticks < std::get<1>(current))  //change
-            continue;
-        ticks -= std::get<1>(current);
-        enemyWaveData.pop_front();
-        std::random_device dev;
-        std::mt19937 rng(dev());
-        std::shuffle(laneNum.begin(), laneNum.end(), rng);
-        std::uniform_int_distribution<std::mt19937::result_type> dist(1, 3);
-        Enemy* enemy;
-        for (int j = 0; j < std::get<2>(current); j++) {
-            const Engine::Point SpawnCoordinate = Engine::Point(SpawnGridPointx * BlockSize + BlockSize / 2 + dist(rng) * 15, laneNum[j] * BlockSize + BlockSize / 2);
-            switch (std::get<0>(current)) {
-                case 1:
-                    EnemyGroup->AddNewObject(enemy = new EnemyNormal(SpawnCoordinate.x, SpawnCoordinate.y));
-                    break;
-                case 2:
-                    EnemyGroup->AddNewObject(enemy = new EnemySofa(SpawnCoordinate.x, SpawnCoordinate.y));
-                    break;
-                case 3:
-                    EnemyGroup->AddNewObject(enemy = new EnemyStrong(SpawnCoordinate.x, SpawnCoordinate.y));
-                    break;
-                    // nTODO 2 (7/8): You need to modify 'resources/enemy1.txt', or 'resources/enemy2.txt' to spawn the 4th enemy.
-                    //         The format is "[EnemyId] [TimeDelay] [LaneNum] [Repeat]".
-                    // nTODO 2 (8/8): Enable the creation of the 4th enemy.
-                case 4:
-                    EnemyGroup->AddNewObject(enemy = new EnemyNerd(SpawnCoordinate.x, SpawnCoordinate.y));
-                    break;
-                default:
-                    continue;
+            auto current = enemyWaveData.front();
+            if (ticks < std::get<1>(current))  //change
+                continue;
+            ticks -= std::get<1>(current);
+            enemyWaveData.pop_front();
+            std::random_device dev;
+            std::mt19937 rng(dev());
+            std::shuffle(laneNum.begin(), laneNum.end(), rng);
+            std::uniform_int_distribution<std::mt19937::result_type> dist(1, 3);
+            Enemy* enemy;
+            for (int j = 0; j < std::get<2>(current); j++) {
+                const Engine::Point SpawnCoordinate = Engine::Point(SpawnGridPointx * BlockSize + BlockSize / 2 + dist(rng) * 15, laneNum[j] * BlockSize + BlockSize / 2);
+                switch (std::get<0>(current)) {
+                    case 1:
+                        EnemyGroup->AddNewObject(enemy = new EnemyNormal(SpawnCoordinate.x, SpawnCoordinate.y));
+                        break;
+                    case 2:
+                        EnemyGroup->AddNewObject(enemy = new EnemySofa(SpawnCoordinate.x, SpawnCoordinate.y));
+                        break;
+                    case 3:
+                        EnemyGroup->AddNewObject(enemy = new EnemyStrong(SpawnCoordinate.x, SpawnCoordinate.y));
+                        break;
+                        // nTODO 2 (7/8): You need to modify 'resources/enemy1.txt', or 'resources/enemy2.txt' to spawn the 4th enemy.
+                        //         The format is "[EnemyId] [TimeDelay] [LaneNum] [Repeat]".
+                        // nTODO 2 (8/8): Enable the creation of the 4th enemy.
+                    case 4:
+                        EnemyGroup->AddNewObject(enemy = new EnemyNerd(SpawnCoordinate.x, SpawnCoordinate.y));
+                        break;
+                    default:
+                        continue;
+                }
+                // Compensate the time lost.
+                enemy->Update(ticks);
             }
-            // Compensate the time lost.
-            enemy->Update(ticks);
+        } else if (GameStage == 2) {
+            // GameStage 2
+            if (BossWaitTime < 5) {
+                BossWaitTime += deltaTime;
+            } else if (BossSpawned && EnemyGroup->GetObjects().empty()) {
+                if (lives != 0)
+                    Engine::EngineGame::GetInstance().ChangeScene("win");
+            } else if (!BossSpawned) {
+                const Engine::Point SpawnCoordinate = Engine::Point(SpawnGridPointx + BlockSize * 12, BlockSize * 3);
+                EnemyGroup->AddNewObject(new EnemySuper(SpawnCoordinate.x, SpawnCoordinate.y));
+                BossSpawned = true;
+            }
         }
     }
     if (preview) {
@@ -330,6 +352,13 @@ void ScenePlay::OnKeyDown(int keyCode) {
 }
 void ScenePlay::HitBy() {
     lives--;
+    if (lives <= 0) {
+        //lose
+        Engine::EngineGame::GetInstance().ChangeScene("lose");
+    }
+}
+void ScenePlay::HitBy(bool oneKill) {
+    lives = 0;
     if (lives <= 0) {
         //lose
         Engine::EngineGame::GetInstance().ChangeScene("lose");
@@ -498,4 +527,7 @@ void ScenePlay::FreeSpace(int x, int y) {
 }
 int ScenePlay::getLane(int y) {
     return y / BlockSize;
+}
+int ScenePlay::getCurrStage() {
+    return GameStage;
 }

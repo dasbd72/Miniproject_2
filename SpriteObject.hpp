@@ -12,6 +12,7 @@
 
 class SpriteObject : public Engine::Sprite {
    public:
+    std::string name;
     float CollisionRadius = 0;
     enum EFFECT : signed {
         FROZEN
