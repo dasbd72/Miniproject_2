@@ -11,7 +11,7 @@
 #include "Turret.hpp"
 
 const float EnemySuper::ExplosionRadius = 200;
-EnemySuper::EnemySuper(int x, int y) : Enemy("play/boss-0.png", x, y, 220, 10, 2000, 500, 10000, 250, 20) {
+EnemySuper::EnemySuper(int x, int y) : Enemy("play/boss-0.png", x, y, 220, 15, 5000, 500, 10000, 250, 20) {
     BossStage = 0;
     name = "EnemySuper";
 }
