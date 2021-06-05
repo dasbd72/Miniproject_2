@@ -15,6 +15,7 @@
 
 #include "AudioHelper.hpp"
 #include "ButtonTurret.hpp"
+#include "Collider.hpp"
 #include "EffectDirty.hpp"
 #include "Enemy.hpp"
 #include "EnemyNerd.hpp"
@@ -81,6 +82,7 @@ void ScenePlay::Initialize() {
     UIGroup->AddNewObject(imgTarget);
     // Preload Lose Scene
     deathBGMInstance = Engine::Resources::GetInstance().GetSampleInstance("astronomia.ogg");
+    bossBGMInstance = Engine::Resources::GetInstance().GetSampleInstance("Boss.ogg");
     Engine::Resources::GetInstance().GetBitmap("lose/benjamin-happy.png");
     // Start BGM.
     bgmId = AudioHelper::PlayBGM("play.ogg");
@@ -88,7 +90,9 @@ void ScenePlay::Initialize() {
 void ScenePlay::Terminate() {
     AudioHelper::StopBGM(bgmId);
     AudioHelper::StopSample(deathBGMInstance);
+    AudioHelper::StopSample(bossBGMInstance);
     deathBGMInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
+    bossBGMInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
     // delete TileMapGroup;
     // delete GroundEffectGroup;
@@ -137,8 +141,10 @@ void ScenePlay::Update(float deltaTime) {
         }
     }
     deathCountDown = newDeathCountDown;
-    if (SpeedMult == 0)
+    if (SpeedMult == 0) {
         AudioHelper::StopSample(deathBGMInstance);
+        AudioHelper::StopSample(bossBGMInstance);
+    }
     if (deathCountDown == -1 && lives > 0) {
         AudioHelper::StopSample(deathBGMInstance);
         dangerIndicator->Tint.a = 0;
@@ -202,11 +208,13 @@ void ScenePlay::Update(float deltaTime) {
             if (BossWaitTime < 5) {
                 BossWaitTime += deltaTime;
             } else if (BossSpawned && EnemyGroup->GetObjects().empty()) {
+                AudioHelper::StopSample(bossBGMInstance);
                 if (lives != 0)
                     Engine::EngineGame::GetInstance().ChangeScene("win");
             } else if (!BossSpawned) {
                 const Engine::Point SpawnCoordinate = Engine::Point(SpawnGridPointx + BlockSize * 12, BlockSize * 3);
                 EnemyGroup->AddNewObject(new EnemySuper(SpawnCoordinate.x, SpawnCoordinate.y));
+                bossBGMInstance = AudioHelper::PlaySample("Boss.ogg", true, AudioHelper::BGMVolume * 4);
                 BossSpawned = true;
             }
         }
@@ -243,6 +251,7 @@ void ScenePlay::OnMouseMove(int mx, int my) {
     imgTarget->Position.y = y * BlockSize;
 }
 void ScenePlay::OnMouseUp(int button, int mx, int my) {
+    std::cout << "Mouse " << button << " up\n";
     IScene::OnMouseUp(button, mx, my);
     if (!imgTarget->Visible)
         return;
@@ -250,7 +259,7 @@ void ScenePlay::OnMouseUp(int button, int mx, int my) {
     const int y = my / BlockSize;
     if (button & 1) {
         if (mapState[y][x] != TILE_OCCUPIED) {
-            if (!preview || preview->GetName() == "Remove")
+            if (!preview || preview->GetName() == SpriteObject::_REMOVE)
                 return;
             // Check if valid.
             if (!CheckSpaceValid(x, y)) {
@@ -279,18 +288,14 @@ void ScenePlay::OnMouseUp(int button, int mx, int my) {
             mapState[y][x] = TILE_OCCUPIED;
             OnMouseMove(mx, my);
         } else {
-            /**
-             * @brief 
-             * @todo Remove turret
-             */
-            if (!preview || preview->GetName() != "Remove")
+            if (!preview || preview->GetName() != SpriteObject::_REMOVE)
                 return;
             for (auto& it : TowerGroup->GetObjects()) {
                 Turret* turret = dynamic_cast<Turret*>(it);
                 if (!turret->Visible)
                     continue;
                 if (int(turret->Position.x / BlockSize) == x && int(turret->Position.y / BlockSize) == y) {
-                    turret->HitBy(this);
+                    turret->HitBy(SpriteObject::_REMOVE);
                     break;
                 }
             }
@@ -453,7 +458,7 @@ void ScenePlay::ConstructUI() {
 
     // Button 4 Turret Tank
     btn = new ButtonTurret("play/floor.png", "play/dirt.png",
-                           Engine::Sprite("play/turret-4.png", 530, BlockSize * MapHeight, 0, 0, 0, 0), 530, 128 * MapHeight, TurretTank::Price);
+                           Engine::Sprite("play/turret-4.png", 545, BlockSize * MapHeight, 0, 0, 0, 0), 530, 128 * MapHeight, TurretTank::Price);
     btn->SetOnClickCallback(std::bind(&ScenePlay::UIBtnClicked, this, 3));
     UIGroup->AddNewControlObject(btn);
 
@@ -519,11 +524,20 @@ bool ScenePlay::CheckSpaceValid(int x, int y) {
         if (pnt.x == x && pnt.y == y) {
             return false;
         }
+        Enemy* enemy = dynamic_cast<Enemy*>(it);
+        if (enemy && enemy->name == SpriteObject::_BOSS) {
+            if (Engine::Collider::IsCircleOverlap(Engine::Point(x, y), 35, enemy->Position, enemy->CollisionRadius))
+                return false;
+        }
     }
     return true;
 }
 void ScenePlay::FreeSpace(int x, int y) {
-    mapState[y / BlockSize][x / BlockSize] = TILE_FLOOR;
+    x /= BlockSize;
+    y /= BlockSize;
+    // std::cout << "Free : " << x << ", " << y << std::endl;
+    if (y >= 0 && y < mapState.size() && x >= 0 && x < mapState[0].size())
+        mapState[y][x] = TILE_FLOOR;
 }
 int ScenePlay::getLane(int y) {
     return y / BlockSize;
@@ -531,3 +545,5 @@ int ScenePlay::getLane(int y) {
 int ScenePlay::getCurrStage() {
     return GameStage;
 }
+
+//RemoveObject(objectIterator);

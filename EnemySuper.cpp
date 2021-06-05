@@ -11,11 +11,15 @@
 #include "Turret.hpp"
 
 const float EnemySuper::ExplosionRadius = 200;
-EnemySuper::EnemySuper(int x, int y) : Enemy("play/boss-0.png", x, y, 220, 15, 5000, 500, 10000, 250, 20) {
+EnemySuper::EnemySuper(int x, int y) : Enemy("play/boss-0.png", x, y, 220, 15, 3200, 500, 10000, 250, 20) {
     BossStage = 0;
-    name = "EnemySuper";
+    name = _BOSS;
 }
 void EnemySuper::Update(float deltaTime) {
+    if (isDead) {
+        getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
+        return;
+    }
     SpriteObject::updateEffect(deltaTime);
     Sprite::Image::Update(deltaTime);
     float remainSpeed = speed * (hasEffect(FROZEN) ? 0.25 : 1);
@@ -27,7 +31,7 @@ void EnemySuper::Update(float deltaTime) {
         if (!turret->Visible)
             continue;
         if (Engine::Collider::IsCircleOverlap(Position, CollisionRadius, turret->Position, turret->CollisionRadius)) {
-            turret->HitBy(this);
+            turret->HitBy(this->name);
         }
     }
 
@@ -44,20 +48,20 @@ void EnemySuper::Update(float deltaTime) {
     Position.x -= Velocity.x * deltaTime;
     Position.y += Velocity.y * deltaTime;
     if (Position.x <= ScenePlay::EndGridPointx * ScenePlay::BlockSize + ScenePlay::BlockSize / 2) {
-        HitBy(getPlayScene());
+        HitBy(_SCENE);
         getPlayScene()->HitBy(true);
         reachEndTime = 0;
         return;
     }
 
-    if (BossStage == 0 && hp < 500) {
+    if (BossStage == 0 && hp < 2400) {
         BossStage = 1;
-        bmp = Engine::Resources::GetInstance().GetBitmap("play/boss-3.png");
-    } else if (BossStage == 1 && hp < 1000) {
+        bmp = Engine::Resources::GetInstance().GetBitmap("play/boss-1.png");
+    } else if (BossStage == 1 && hp < 1600) {
         BossStage = 2;
         bmp = Engine::Resources::GetInstance().GetBitmap("play/boss-2.png");
-    } else if (BossStage == 2 && hp < 1500) {
+    } else if (BossStage == 2 && hp < 800) {
         BossStage = 3;
-        bmp = Engine::Resources::GetInstance().GetBitmap("play/boss-1.png");
+        bmp = Engine::Resources::GetInstance().GetBitmap("play/boss-3.png");
     }
 }

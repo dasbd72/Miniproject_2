@@ -27,59 +27,98 @@ ScenePlay* Turret::getPlayScene() {
 }
 Turret::Turret(std::string imgTurret, float x, float y, float radius, float hp, int price, float coolDown) : SpriteObject(imgTurret, x, y), price(price), coolDown(coolDown), hp(hp) {
     CollisionRadius = radius;
+    isDead = false;
+    name = _TURRET;
 }
-void Turret::HitBy(Engine::IObject* obj) {
-    Bullet* bulletObj = dynamic_cast<Bullet*>(obj);
-    Enemy* enemyObj = dynamic_cast<Enemy*>(obj);
-    ScenePlay* sceneObj = dynamic_cast<ScenePlay*>(obj);
+void Turret::HitBy(NAMES name) {
     auto Scene = getPlayScene();
-    if (enemyObj != nullptr) {
-        this->hp -= enemyObj->damage;
-    } else if (bulletObj != nullptr) {
-        if (bulletObj->parentType == "Enemy")
-            this->hp -= bulletObj->damage;
-    } else if (sceneObj != nullptr) {
-        this->hp = 0;
+    switch (name) {
+        case _BOSS:
+            hp = 0;
+            break;
+        case _EBULLET:
+            hp -= 1;
+            break;
+        case _REMOVE:
+            hp = 0;
+            break;
+        default:
+            break;
     }
     if (this->hp <= 0) {
         OnExplode();
-        Scene->TowerGroup->RemoveObject(objectIterator);
-        AudioHelper::PlayAudio("explosion.wav");
         Scene->FreeSpace(Position.x, Position.y);
+        // Scene->TowerGroup->RemoveObject(objectIterator);
+        isDead = true;
+        AudioHelper::PlayAudio("explosion.wav");
+    }
+}
+void Turret::HitBy(float damage) {
+    auto Scene = getPlayScene();
+    hp -= damage;
+    if (this->hp <= 0) {
+        OnExplode();
+        Scene->FreeSpace(Position.x, Position.y);
+        // Scene->TowerGroup->RemoveObject(objectIterator);
+        isDead = true;
+        AudioHelper::PlayAudio("explosion.wav");
     }
 }
 void Turret::Update(float deltaTime) {
+    if (isDead) {
+        getPlayScene()->TowerGroup->RemoveObject(objectIterator);
+        return;
+    }
     Sprite::Update(deltaTime);
     ScenePlay* scene = getPlayScene();
     if (!Enabled)
         return;
     if (reload > 0) reload -= deltaTime;
-    if (Target) {
-        if (Target->Position.x < Position.x && Target->Position.y >= Position.y && Target->Position.y < Position.y + scene->BlockSize) {
-            Target->lockedTurrets.erase(lockedTurretIterator);
-            Target = nullptr;
-            lockedTurretIterator = std::list<Turret*>::iterator();
+
+    bool hasTarget = false;
+    if (scene->getCurrStage() == 2 && scene->getLane(this->Position.y) > 0 && scene->getLane(this->Position.y) < 5) hasTarget = true;
+    for (auto& it : scene->EnemyGroup->GetObjects()) {
+        if (it->Position.x > this->Position.x && scene->getLane(it->Position.y) == scene->getLane(this->Position.y)) {
+            hasTarget = true;
+            break;
         }
-        // Shoot reload.
+    }
+    if (hasTarget) {
         if (reload <= 0) {
             // shoot.
             reload = coolDown;
             CreateBullet();
         }
     }
-    if (!Target) {
-        // Lock first seen target.
-        // Can be improved by Spatial Hash, Quad Tree, ...
-        // However simply loop through all enemies is enough for this program.
-        for (auto& it : scene->EnemyGroup->GetObjects()) {
-            if (it->Position.x > Position.x && it->Position.y >= Position.y && it->Position.y < Position.y + scene->BlockSize) {
-                Target = dynamic_cast<Enemy*>(it);
-                Target->lockedTurrets.push_back(this);
-                lockedTurretIterator = std::prev(Target->lockedTurrets.end());
-                break;
-            }
-        }
-    }
+    // if (Target) {
+    //     if (Target->Position.x < Position.x && Target->Position.y >= Position.y && Target->Position.y < Position.y + scene->BlockSize) {
+    //         Target->lockedTurrets.erase(lockedTurretIterator);
+    //         Target = nullptr;
+    //         lockedTurretIterator = std::list<Turret*>::iterator();
+    //     }
+    //     // Shoot reload.
+    //     if (reload <= 0) {
+    //         // shoot.
+    //         reload = coolDown;
+    //         CreateBullet();
+    //     }
+    // }
+    // if (!Target) {
+    //     // Lock first seen target.
+    //     // Can be improved by Spatial Hash, Quad Tree, ...
+    //     // However simply loop through all enemies is enough for this program.
+    //     for (auto& it : scene->EnemyGroup->GetObjects()) {
+    //         Enemy* enemy = dynamic_cast<Enemy*>(it);
+    //         if (enemy->isDead)
+    //             continue;
+    //         if (it->Position.x > Position.x && it->Position.y >= Position.y && it->Position.y < Position.y + scene->BlockSize) {
+    //             Target = dynamic_cast<Enemy*>(it);
+    //             Target->lockedTurrets.push_back(this);
+    //             lockedTurretIterator = std::prev(Target->lockedTurrets.end());
+    //             break;
+    //         }
+    //     }
+    // }
 }
 void Turret::OnExplode() {
     std::random_device dev;
@@ -97,13 +136,12 @@ void Turret::Draw() const {
     // }
     Sprite::Draw();
     if (ScenePlay::DebugMode) {
-        // Draw target radius.
-        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(0, 0, 255), 2);
+        // Draw target radius.        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(0, 0, 255), 2);
     }
 }
 int Turret::GetPrice() const {
     return price;
 }
-std::string Turret::GetName() const {
+Turret::NAMES Turret::GetName() const {
     return name;
 }

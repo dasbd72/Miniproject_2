@@ -50,7 +50,8 @@ class Turret : public SpriteObject {
      * 
      * @param deltaTime 
      */
-    void HitBy(Engine::IObject* obj) override;
+    void HitBy(NAMES name) override;
+    void HitBy(float damage) override;
     void Update(float deltaTime) override;
     /**
      * @brief Draw Overriden
@@ -58,6 +59,6 @@ class Turret : public SpriteObject {
      */
     void Draw() const override;
     int GetPrice() const;
-    std::string GetName() const;
+    NAMES GetName() const;
 };
 #endif  // TURRET_HPP

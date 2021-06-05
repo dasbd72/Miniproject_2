@@ -12,7 +12,9 @@
 #include "ScenePlay.hpp"
 #include "Turret.hpp"
 
-EBullet::EBullet(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parentObj, float damage) : Bullet("play/bullet-7.png", 800, damage, position, forwardDirection, rotation - ALLEGRO_PI / 2, parentObj) {}
+EBullet::EBullet(Engine::Point position, Engine::Point forwardDirection, float rotation, SpriteObject* parentObj, float damage) : Bullet("play/bullet-7.png", 800, damage, position, forwardDirection, rotation - ALLEGRO_PI / 2, parentObj) {
+    name = _EBULLET;
+}
 void EBullet::OnExplode(SpriteObject* obj) {
     std::random_device dev;
     std::mt19937 rng(dev());

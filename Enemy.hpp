@@ -48,16 +48,17 @@ class Enemy : public SpriteObject {
      */
     Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money, float damage, float atkRadius, float coolDown);
     /**
-     * @brief Enemy HitBy obj
+     * @brief Enemy HitBy name
      * 
-     * @param obj 
+     * @param name 
      */
-    void HitBy(Engine::IObject* obj) override;
+    void HitBy(NAMES name) override;
     /**
      * @brief Update Overridden
      * 
      * @param deltaTime 
      */
+    void HitBy(float damage) override;
     void Update(float deltaTime) override;
     /**
      * @brief Draw overriden

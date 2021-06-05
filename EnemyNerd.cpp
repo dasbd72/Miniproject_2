@@ -9,6 +9,7 @@
 EnemyNerd::EnemyNerd(int x, int y) : Enemy("play/enemy-4.png", x, y, 30, 30, 150, 75, 10, 170, 7) {
 }
 void EnemyNerd::Update(float deltaTime) {
+    speed += 10 * deltaTime;
     Enemy::Update(deltaTime);
 }
 void EnemyNerd::CreateBullet() {

@@ -53,23 +53,40 @@ Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float
     reachEndTime = 0;
     Velocity = Engine::Point(speed, 0);
     target = Engine::Point(ScenePlay::EndGridPointx, static_cast<int>(floor(Position.y / ScenePlay::BlockSize))) * ScenePlay::BlockSize + Engine::Point(ScenePlay::BlockSize / 2, ScenePlay::BlockSize / 2);
+    isDead = false;
 }
-void Enemy::HitBy(Engine::IObject *obj) {
-    Bullet *bulletObj = dynamic_cast<Bullet *>(obj);
-    Turret *turretObj = dynamic_cast<Turret *>(obj);
-    Plane *planeObj = dynamic_cast<Plane *>(obj);
-    Engine::IScene *sceneObj = dynamic_cast<Engine::IScene *>(obj);
-
-    if (bulletObj != nullptr) {
-        hp -= bulletObj->damage;
-        if (bulletObj->hasEffect(FROZEN)) addEffect(FROZEN, 2);
-    } else if (sceneObj != nullptr || planeObj != nullptr || (turretObj != nullptr && turretObj->name == "TurretExplode")) {
-        if (name != "EnemySuper")
+void Enemy::HitBy(NAMES name) {
+    switch (name) {
+        case _SCENE:
             hp = 0;
-        else
-            hp -= 50;
-    } else {
-        hp -= 200;
+            break;
+        case _PLANE: {
+            if (this->name == _BOSS)
+                hp -= 50;
+            else
+                hp = 0;
+            break;
+        } break;
+        case _BULLETFROZEN: {
+            hp -= 1;
+            addEffect(FROZEN, 2);
+            break;
+        }
+        case _BULLETFIRE:
+            hp -= 1;
+            break;
+        case _BULLETPLATELET:
+            hp -= 1;
+            break;
+        case _TURRETEXPLODE: {
+            if (this->name == _BOSS)
+                hp -= 50;
+            else
+                hp = 0;
+            break;
+        }
+        default:
+            break;
     }
     if (hp <= 0) {
         OnExplode();
@@ -79,11 +96,31 @@ void Enemy::HitBy(Engine::IObject *obj) {
         for (auto &it : lockedBullets)
             it->Target = nullptr;
         getPlayScene()->EarnMoney(money);
-        getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
+        // getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
+        isDead = true;
+        AudioHelper::PlayAudio("explosion.wav");
+    }
+}
+void Enemy::HitBy(float damage) {
+    hp -= damage;
+    if (hp <= 0) {
+        OnExplode();
+        // Remove all turret's reference to target.
+        for (auto &it : lockedTurrets)
+            it->Target = nullptr;
+        for (auto &it : lockedBullets)
+            it->Target = nullptr;
+        getPlayScene()->EarnMoney(money);
+        // getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
+        isDead = true;
         AudioHelper::PlayAudio("explosion.wav");
     }
 }
 void Enemy::Update(float deltaTime) {
+    if (isDead) {
+        getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
+        return;
+    }
     SpriteObject::updateEffect(deltaTime);
     float remainSpeed = speed * (hasEffect(FROZEN) ? 0.25 : 1);
     Turret *targetTurret = getTurretTarget();
@@ -100,7 +137,7 @@ void Enemy::Update(float deltaTime) {
     Position.x -= Velocity.x * deltaTime;
     Position.y += Velocity.y * deltaTime;
     if (Position.x <= ScenePlay::EndGridPointx * ScenePlay::BlockSize + ScenePlay::BlockSize / 2) {
-        HitBy(getPlayScene());
+        HitBy(_SCENE);
         getPlayScene()->HitBy();
         reachEndTime = 0;
         return;

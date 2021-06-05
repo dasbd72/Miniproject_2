@@ -31,6 +31,11 @@ void TurretPlatelet::CreateBullet() {
     AudioHelper::PlayAudio("laser.wav");
 }
 void TurretPlatelet::Update(float deltaTime) {
+    if (isDead) {
+        getPlayScene()->TowerGroup->RemoveObject(objectIterator);
+        return;
+    }
+
     Sprite::Update(deltaTime);
     ScenePlay* scene = getPlayScene();
     if (!Enabled)
@@ -46,10 +51,13 @@ void TurretPlatelet::Update(float deltaTime) {
         // Lock first seen target.
         // Can be improved by Spatial Hash, Quad Tree, ...
         // However simply loop through all enemies is enough for this program.
-        int ty = static_cast<int>(floor(Position.y / ScenePlay::BlockSize));
+        int ty = scene->getLane(this->Position.y);
         int ey;
         for (auto& it : scene->EnemyGroup->GetObjects()) {
-            ey = static_cast<int>(floor(it->Position.y / ScenePlay::BlockSize));
+            Enemy* enemy = dynamic_cast<Enemy*>(it);
+            if (enemy->isDead)
+                continue;
+            ey = scene->getLane(it->Position.y);
             if (it->Position.x > Position.x && ey >= ty - 1 && ey <= ty + 1) {
                 Target = dynamic_cast<Enemy*>(it);
                 Target->lockedTurrets.push_back(this);

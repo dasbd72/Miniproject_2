@@ -8,7 +8,7 @@ include_directories(allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7
 link_directories(allegro-x86_64-w64-mingw32-gcc-10.2.0-posix-seh-static-5.2.7.0\\lib)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_CURRENT_SOURCE_DIR})
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 
 file(GLOB SRCFILES *.cpp)
 add_executable(TowerDefense ${SRCFILES})

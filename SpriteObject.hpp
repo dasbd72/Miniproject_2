@@ -12,11 +12,23 @@
 
 class SpriteObject : public Engine::Sprite {
    public:
-    std::string name;
     float CollisionRadius = 0;
     enum EFFECT : signed {
         FROZEN
     };
+    enum NAMES : signed {
+        _SCENE,
+        _PLANE,
+        _TURRET,
+        _BULLETFROZEN,
+        _BULLETFIRE,
+        _BULLETPLATELET,
+        _TURRETEXPLODE,
+        _REMOVE,
+        _EBULLET,
+        _BOSS
+    };
+    NAMES name;
     /**
      * @brief Construct a new Sprite Object object
      * 
@@ -53,7 +65,9 @@ class SpriteObject : public Engine::Sprite {
      */
     void updateEffect(float deltaTime);
 
-    virtual void HitBy(Engine::IObject* obj) {}
+    virtual void HitBy(NAMES name) {}
+    virtual void HitBy(float damage){};
+    bool isDead = false;
 
    protected:
     /// Set Object Of Effects

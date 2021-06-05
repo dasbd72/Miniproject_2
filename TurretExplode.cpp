@@ -23,12 +23,12 @@ void TurretExplode::OnExplode() {
     for (auto& it : getPlayScene()->EnemyGroup->GetObjects()) {
         Enemy* enemy = dynamic_cast<Enemy*>(it);
         if (Engine::Collider::IsCircleOverlap(Position, ExplodeRadius, enemy->Position, enemy->CollisionRadius))
-            enemy->HitBy(this);
+            enemy->HitBy(this->name);
     }
 }
 
 TurretExplode::TurretExplode(float x, float y) : Turret("play/turret-5.png", x, y, 30, 1, Price, 0.7) {
-    name = "TurretExplode";
+    name = _TURRETEXPLODE;
 }
 void TurretExplode::Draw() const {
     Turret::Draw();

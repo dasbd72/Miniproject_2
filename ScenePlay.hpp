@@ -28,6 +28,7 @@ class ScenePlay final : public Engine::IScene {
     };
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
+    std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bossBGMInstance;
 
    protected:
     int lives;
